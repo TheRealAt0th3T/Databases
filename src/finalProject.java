@@ -10,7 +10,19 @@ import java.text.SimpleDateFormat;
 
 class finalProject {
     public static void main(String[] args) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            System.out.println();
+			System.out.println("JDBC driver loaded");
+			System.out.println();
 
+            Connection conn = makeConnection("53306", "FinalProject","Minfilia1178");
+            runQuery(conn);
+
+            conn.close();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 
     /**
@@ -50,7 +62,7 @@ class finalProject {
 
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM Item;");
+            rs = stmt.executeQuery("SELECT * FROM class;");
             // Now do something with the ResultSet ....
             
             rs.beforeFirst();
@@ -58,7 +70,10 @@ class finalProject {
                 System.out.println(rs.getInt(1) 
                         + ":" + rs.getString(2) 
                         + ":" + rs.getString(3) 
-                        + ":" + rs.getString(4));
+                        + ":" + rs.getInt(4)
+                        + ":" + rs.getString(5)
+                        + ":" + rs.getString(6)
+                        + ":" + rs.getString(7));
             }
 
         } catch (SQLException ex) {
