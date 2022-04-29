@@ -61,8 +61,9 @@ class finalProject {
             rs = stmt.executeQuery("SELECT * FROM class;");
             // Now do something with the ResultSet ....
             
-            rs.beforeFirst();
-            while (rs.next()) {
+            boolean rowsLeft = true;
+            rs.first();
+            while (rowsLeft) {
                 System.out.println(rs.getInt(1) 
                         + ":" + rs.getString(2) 
                         + ":" + rs.getString(3) 
@@ -70,6 +71,7 @@ class finalProject {
                         + ":" + rs.getString(5)
                         + ":" + rs.getString(6)
                         + ":" + rs.getString(7));
+                        rowsLeft = rs.next();
             }
 
         } catch (SQLException ex) {
