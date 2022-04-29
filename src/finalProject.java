@@ -1,12 +1,9 @@
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 class finalProject {
     public static void main(String[] args) {
@@ -34,8 +31,7 @@ class finalProject {
      */
     public static Connection makeConnection(String port, String database, String password) {
         try {
-            Connection conn = null;
-            conn = DriverManager.getConnection(
+            Connection conn = DriverManager.getConnection(
 						"jdbc:mysql://localhost:" + port+ "/" + database+
 						"?verifyServerCertificate=false&useSSL=true", "msandbox",
 						password);
