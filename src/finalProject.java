@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 class finalProject {
     public static void main(String[] args) {
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             System.out.println();
 			System.out.println("JDBC driver loaded");
 			System.out.println();
