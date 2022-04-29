@@ -57,7 +57,7 @@ class finalProject {
         ResultSet rs = null;
 
         try {
-            stmt = conn.createStatement();
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = stmt.executeQuery("SELECT * FROM class;");
             // Now do something with the ResultSet ....
             
@@ -103,28 +103,27 @@ class finalProject {
 
     }
 
-    public static String[] listClasses() {
-        return null;
+    public static void listClasses() {
     }
 
     public static void activateClass() {
 
     }
 
-    public static String[] showActiveClass() {
-        return null;
+    public static void showActiveClass() {
+
     }
 
-    public static String[] showCategories() {
-        return null;
+    public static void showCategories() {
+        
     }
 
     public static void addCategory() {
 
     }
 
-    public static String[] showAssignment() {
-        return null;
+    public static void showAssignment() {
+        
     }
 
     public static void addAssignment() {
@@ -139,8 +138,8 @@ class finalProject {
 
     }
 
-    public static String[] showStudents(String key) {
-        return null;
+    public static void showStudents(String key) {
+        
     }
 
     public static void gradeAssignment() {
@@ -151,8 +150,8 @@ class finalProject {
 
     }
 
-    public static String[] gradebook() {
-        return null;
+    public static void gradebook() {
+        
     }
 
 }
