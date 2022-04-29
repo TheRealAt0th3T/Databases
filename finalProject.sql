@@ -1,33 +1,57 @@
 CREATE DATABASE IF NOT EXISTS finalProject;
 USE finalProject;
+#DROP DATABASE finalProject;
+
+Select * From class
+JOIN categories ON class.class_id = categories.class_id
+JOIN assignments ON assignments.categories_id = categories.categories_id;
+
+SELECT * FROM class
+JOIN students on students.class_id = class.class_id
+JOIN assignedHW on assignedHW.students_id = students.students_id;
+
+CREATE TABLE class(
+	class_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	class_courseNum VARCHAR(10) NOT NULL,
+	class_term VARCHAR(20) NOT NULL,
+	class_sectionNum INTEGER NOT NULL,
+	class_description VARCHAR(100) NOT NULL,
+	class_professor VARCHAR(20) NOT NULL, 
+	class_title VARCHAR(50) NOT NULL
+);
 
 CREATE TABLE students (
 	students_id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	students_name VARCHAR(50) NOT NULL,
 	students_username VARCHAR(50) NOT NULL,
-	students_IDnum INTEGER NOT NULL
+	students_IDnum BIGINT NOT NULL,
+	class_id INTEGER NOT NULL,
+    FOREIGN KEY (class_id) REFERENCES class (class_id),
+    INDEX (class_id)
 );
 
-CREATE TABLE class(
-	class_id INTEGER PRIMARY KEY AUTO_INCREMENT,
-	class_courseNum INTEGER NOT NULL,
-	class_term VARCHAR(20) NOT NULL,
-	class_sectionNum INTEGER NOT NULL,
-	class_description VARCHAR(50) NOT NULL,
-	class_professor VARCHAR(20) NOT NULL, 
-	class_title VARCHAR(10) NOT NULL
+CREATE TABLE categories(
+	categories_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	categories_name VARCHAR(50) NOT NULL,
+    class_id INTEGER NOT NULL, 
+    
+	FOREIGN KEY (class_id) REFERENCES class (class_id),
+    INDEX (class_id)
 );
 
 CREATE TABLE assignments(
 	assignments_id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	assignments_name VARCHAR(20) UNIQUE NOT NULL, 
-	assignments_description VARCHAR(50) NOT NULL, 
-	assignments_pointValue INTEGER NOT NULL
-);
+	assignments_description VARCHAR(100) NOT NULL, 
+	assignments_pointValue INTEGER NOT NULL,
+    #class_id INTEGER NOT NULL, 
+	categories_id INTEGER NOT NULL, 
 
-CREATE TABLE categories(
-	categories_id INTEGER PRIMARY KEY AUTO_INCREMENT,
-	categories_name VARCHAR(10) NOT NULL
+    #FOREIGN KEY (class_id) REFERENCES class (class_id),
+    #INDEX (class_id),
+    FOREIGN KEY (categories_id) REFERENCES categories (categories_id),
+    INDEX (categories_id)
+    
 );
 
 CREATE TABLE hasWeight(
