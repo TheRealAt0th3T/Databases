@@ -16,7 +16,7 @@ class finalProject {
 			System.out.println("JDBC driver loaded");
 			System.out.println();
 
-            Connection conn = makeConnection("53306", "FinalProject","Minfilia1178");
+            Connection conn = makeConnection("53306", "finalProject","Minfilia1178");
             runQuery(conn);
 
             conn.close();
