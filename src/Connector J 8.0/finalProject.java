@@ -6,11 +6,19 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 class finalProject {
-    static int currClassID = 0;
-    static String currClass = "";
-    static String currTerm = "";
-    static String currSection = "";
-    static String currDescription = "";
+    private int currClassID;
+    private String currClass;
+    private String currTerm;
+    private String currSection;
+    private String currDescription;
+
+    public finalProject() {
+        this.currClassID = 0;
+        this.currClass = "";
+        this.currTerm = "";
+        this.currSection = "";
+        this.currDescription = "";
+    }
 
     public static void main(String[] args) {
         try {
@@ -20,6 +28,8 @@ class finalProject {
 			System.out.println();
 
             Connection conn = makeConnection("53306", "finalProject","Minfilia1178");
+
+            finalProject fp = new finalProject();
 
             switch(args[0]) {
                 case "new-class":
@@ -37,16 +47,16 @@ class finalProject {
                 case "select-class":
                     System.out.println("Selecting class...");
                     if (args.length == 2) {
-                        activateClass(conn, args[1], null, null);
+                        fp.activateClass(conn, args[1], null, null);
                     } else if (args.length == 3) {
-                        activateClass(conn, args[1], args[2], null);
+                        fp.activateClass(conn, args[1], args[2], null);
                     } else if (args.length == 4) {
-                        activateClass(conn, args[1], args[2], args[3]);
+                        fp.activateClass(conn, args[1], args[2], args[3]);
                     }
                     break;
                 case "show-class":
                     System.out.println("Showing active class");
-                    showActiveClass(conn);
+                    fp.showActiveClass(conn);
                     break;
                 case "show-categories":
                     System.out.println("Showing all categories...");
@@ -67,15 +77,15 @@ class finalProject {
                 case "add-student":
                     System.out.println("Adding student to current class...");
                     if(args.length > 2){
-                        addStudent(conn, args[1], args[2], args[3], args[4]);
+                        fp.addStudent(conn, args[1], args[2], args[3], args[4]);
                     }else {
-                        editStudent(conn, args[1]);
+                        fp.editStudent(conn, args[1]);
                     }
                     break;
                 case "show-students":
                     if(args.length > 1){
                         System.out.println("Showing all students...");
-                        showAllStudents(conn);
+                        fp.showAllStudents(conn);
                     }else{
                         System.out.println("Showing specific student...");
                         showStudents(conn, args[1]);
@@ -257,7 +267,7 @@ class finalProject {
         }
     }
 
-    public static void activateClass(Connection conn, String courseNum, String term, String sectionNum) {
+    public void activateClass(Connection conn, String courseNum, String term, String sectionNum) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         String cond = "";
@@ -307,21 +317,21 @@ class finalProject {
 
                     while (hasNext) {
                         if (recent == null) {
-                            currClassID = rs.getInt(1);
-                            currClass = rs.getString(2);
-                            currTerm = rs.getString(3);
-                            currSection = Integer.toString(rs.getInt(4));
-                            currDescription = rs.getString(5);
+                            this.currClassID = rs.getInt(1);
+                            this.currClass = rs.getString(2);
+                            this.currTerm = rs.getString(3);
+                            this.currSection = Integer.toString(rs.getInt(4));
+                            this.currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
                             hasNext = rs.next();
                             System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                         } else if (recent != null && fullTerm != rs.getString(3) && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
-                            currClassID = rs.getInt(1);
-                            currClass = rs.getString(2);
-                            currTerm = rs.getString(3);
-                            currSection = Integer.toString(rs.getInt(4));
-                            currDescription = rs.getString(5);
+                            this.currClassID = rs.getInt(1);
+                            this.currClass = rs.getString(2);
+                            this.currTerm = rs.getString(3);
+                            this.currSection = Integer.toString(rs.getInt(4));
+                            this.currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
                             hasNext = rs.next();
@@ -333,11 +343,11 @@ class finalProject {
                         
                     }
                 } else {
-                    currClassID = rs.getInt(1);
-                    currClass = rs.getString(2);
-                    currTerm = rs.getString(3);
-                    currSection = Integer.toString(rs.getInt(4));
-                    currDescription = rs.getString(5);
+                    this.currClassID = rs.getInt(1);
+                    this.currClass = rs.getString(2);
+                    this.currTerm = rs.getString(3);
+                    this.currSection = Integer.toString(rs.getInt(4));
+                    this.currDescription = rs.getString(5);
                     System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                 }
             }
@@ -367,8 +377,8 @@ class finalProject {
         }
     }
 
-    public static void showActiveClass(Connection conn) {
-        System.out.println("Course ID: " + currClassID + "|Course Number: " + currClass + "|Term: " + currTerm + "|Section: " + currSection + "|Description: " + currDescription);
+    public void showActiveClass(Connection conn) {
+        System.out.println("Course ID: " + this.currClassID + "|Course Number: " + this.currClass + "|Term: " + this.currTerm + "|Section: " + this.currSection + "|Description: " + this.currDescription);
     }
 
     /**
@@ -537,7 +547,7 @@ class finalProject {
      *
      * @param conn
      */
-    public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
+    public void addStudent(Connection conn, String username, String studentid, String last, String first) {
         PreparedStatement stmt = null;
         Statement checkStmt = null;
         ResultSet rs = null;
@@ -570,7 +580,7 @@ class finalProject {
                 stmt.setString(2, last);
                 stmt.setString(3, username);
                 stmt.setInt(4, Integer.parseInt(studentid));
-                stmt.setString(5, Integer.toString(currClassID));
+                stmt.setString(5, Integer.toString(this.currClassID));
                 stmt.execute();
             }
 
@@ -604,7 +614,7 @@ class finalProject {
      * adding existing student to current class, if not existing then fails
      * @param conn
      */
-    public static void editStudent(Connection conn, String username) {
+    public void editStudent(Connection conn, String username) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -612,7 +622,7 @@ class finalProject {
             rs = stmt.executeQuery("SELECT * FROM students WHERE students_username =" + username);
 
             if(rs != null){ //therefore student exists
-                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currClass + "WHERE username =" + username);
+                stmt = conn.prepareStatement("UPDATE students SET class_id = " + this.currClass + "WHERE username =" + username);
                 stmt.execute();
             }else{
                 System.out.println("ERROR: This user does not exist.");
@@ -647,18 +657,18 @@ class finalProject {
      * showing ALL students in currClass
      * @param conn
      */
-    public static void showAllStudents(Connection conn) {
+    public void showAllStudents(Connection conn) {
 
         PreparedStatement stmt = null;
 
         try {
             String temp = "SELECT * FROM class" +
                     "JOIN students on students.class_id = class.class_id" +
-                    "WHERE class_courseNum = " + currClass;
-            if(currTerm != null){
-                temp += "AND class_term = " + currTerm;
-                if(currSection != null){ //if sectionNUM exists
-                    temp += "and class_sectionNum = " + currSection;
+                    "WHERE class_courseNum = " + this.currClass;
+            if(this.currTerm != null){
+                temp += "AND class_term = " + this.currTerm;
+                if(this.currSection != null){ //if sectionNUM exists
+                    temp += "and class_sectionNum = " + this.currSection;
                 }
             }
 
