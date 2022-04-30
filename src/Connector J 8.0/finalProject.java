@@ -630,7 +630,6 @@ class finalProject {
      */
     public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
         Statement stmt = null;
-        Statement stmt2 = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         ResultSet student = null;
@@ -655,11 +654,11 @@ class finalProject {
 
                 if (hasResult) {
                     student = ps.getResultSet();
-                    student.first();
+                    student.beforeFirst();
                 }
                 
                 
-                if(hasResult && student != null){ //------------------------------------------------------------------------------------------
+                if(hasResult && student.next()){ //------------------------------------------------------------------------------------------
                     System.out.println("Student Exists. Adding to class now...");
                     ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?");
                     ps.setInt(1, temp);
@@ -708,7 +707,9 @@ class finalProject {
      * @param conn
      */
     public static void editStudent(Connection conn, String username) {
-        PreparedStatement stmt = null;
+        Statement stmt = null;
+        PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
         ResultSet rs = null;
 
         try {
@@ -716,11 +717,19 @@ class finalProject {
             rs = stmt.executeQuery(getActive);
             int temp = rs.getInt(1);
 
-            rs = stmt.executeQuery("SELECT * FROM students WHERE students_username =" + username);
+            rs = stmt2.executeQuery("SELECT * FROM students WHERE students_username =" + username);
+            stmt2 = conn.prepareStatement("SELECT * FROM students WHERE students_username = ?");
+            stmt2.setString(1, username);
+            boolean hasResult = stmt2.execute();
 
-            if(rs != null){ //therefore student exists
-                stmt = conn.prepareStatement("UPDATE students SET class_id = " + temp + "WHERE username =" + username);
-                stmt.execute();
+            if (hasResult) {
+                rs = stmt2.getResultSet();
+                rs.beforeFirst();
+            }
+
+            if(rs.next()){ //therefore student exists
+                stmt3 = conn.prepareStatement("UPDATE students SET class_id = " + temp + "WHERE username =" + username);
+                stmt3.execute();
                 System.out.println("Student was updated.");
             }else{
                 System.out.println("ERROR: This user does not exist.");
@@ -747,6 +756,20 @@ class finalProject {
                 } catch (SQLException sqlEx) {
                 } // ignore
                 stmt = null;
+            }
+            if (stmt2 != null) {
+                try {
+                    stmt2.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt2 = null;
+            }
+            if (stmt3 != null) {
+                try {
+                    stmt3.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt3 = null;
             }
         }
     }
