@@ -10,6 +10,7 @@ class finalProject {
     private static String currClass;
     private static String currTerm;
     private static String currSection;
+    private static String currDescription;
 
     public static void main(String[] args) {
         try {
@@ -30,6 +31,8 @@ class finalProject {
                     listClasses(conn);
                     break;
                 case "select-class":
+                    System.out.println("Selecting class...");
+                    activateClass(conn, Integer.parseInt(args[1]), args[2], args[3]);
                     break;
                 case "show-class":
                     break;
@@ -219,16 +222,40 @@ class finalProject {
         }
     }
 
-    public static void activateClass(Connection conn) {
+    public static void activateClass(Connection conn, int courseNum, String term, String sectionNum) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        String cond = "";
+        boolean hasResult = false;
+        int whichCond = 0;
 
         try {
-            stmt = conn.prepareStatement("Insert INTO class (class_courseNum," +
-            " class_term, class_sectionNum, class_description, class_professor, class_title)" +
-            " VALUES(?, ?, ?, ?);");
+            if (sectionNum != null && term != null) {
+                cond = "class_courseNum = " + courseNum + " AND class_term = " + term + " AND class_sectionNum = " + sectionNum;
+                whichCond = 3;
+            } else if (term != null) {
+                cond = "class_courseNum = " + courseNum + " AND class_term = " + term;
+                whichCond = 2;
+            } else {
+                cond = "class_courseNum = " + courseNum;
+                whichCond = 1;
+            }
+            stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond);
             
-            stmt.execute();
+            hasResult = stmt.execute();
+
+            if (hasResult) {
+                rs = stmt.getResultSet();
+                rs.first();
+                if (whichCond == 2 && rs.next()) {
+                    System.out.println("There are multiple sections for " + courseNum + " " + term);
+                } else {
+                    currClassID = rs.getInt(1);
+                    currClass = rs.getString(2);
+                    currTerm = rs.getString(3);
+                    currSection = Integer.toString(rs.getInt(4));
+                }
+            }
 
         } catch (SQLException ex) {
             // handle any errors
