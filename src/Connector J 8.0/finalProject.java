@@ -842,7 +842,7 @@ class finalProject {
      * @param conn
      */
     public static void showStudents(Connection conn, String name) {
-
+        PreparedStatement ps = null;
         Statement stmt = null;
         ResultSet rs = null;
 
