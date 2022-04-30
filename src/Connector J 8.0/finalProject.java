@@ -890,10 +890,20 @@ class finalProject {
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ps = conn.prepareStatement("JOIN assignedHW ON assignedHW.assignments_id = assignments.assignments_id" +
-                    "JOIN students ON assignedHW.students_id = students.students_id WHERE assignments_name = ? AND students_username = ?;");
+            ps = conn.prepareStatement("SELECT assignments_pointValue, assignedHW_grade, students_username FROM assignments" +
+                            " JOIN assignedHW ON assignedHW.assignments_id = assignments.assignments_id" +
+                    " JOIN students ON assignedHW.students_id = students.students_id WHERE assignments_name = ? AND students_username = ?;");
             ps.setString(1, assignmentName);
+            ps.setString(2, username);
+            ps.execute();
 
+            System.out.println("HERE");
+            rs = ps.getResultSet();
+
+            if(rs.getInt(1) < grade){
+                System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(1) + ").");
+            }
+            
             /*
             if(rs.getInt(1) > Integer.parseInt(grade)){
                 System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(1) + ").");
