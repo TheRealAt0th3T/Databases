@@ -574,14 +574,15 @@ class finalProject {
 
     public static void addAssignment(Connection conn, String name, String cat, String descrip, String points) {
         PreparedStatement stmt = null;
+        PreparedStatement stmtTwo = null;
         ResultSet rs = null;
 
         try {
-            stmt = conn.prepareStatement("insert into assignments" +
+            stmtTwo = conn.prepareStatement("insert into assignments" +
                     "(assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, name);
-            stmt.setString(2, cat);
-            stmt.setString(3, descrip);
+            stmtTwo.setString(1, name);
+            stmtTwo.setString(2, cat);
+            stmtTwo.setString(3, descrip);
 
             //check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -590,8 +591,8 @@ class finalProject {
             rs = stmt.getResultSet();
             rs.first();
             if(rs != null){
-                stmt.setString(4, Integer.toString(rs.getInt(1)));
-                stmt.execute();
+                stmtTwo.setString(4, Integer.toString(rs.getInt(1)));
+                stmtTwo.execute();
                 System.out.println("Assignment was added.");
             }else{
                 System.out.println("ERROR: Category does not exist.");
