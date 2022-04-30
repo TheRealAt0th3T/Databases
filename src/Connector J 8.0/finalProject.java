@@ -81,6 +81,8 @@ class finalProject {
                     gradeAssignment(conn, args[1], args[2], args[3]);
                     break;
                 case "student-grades":
+                    System.out.println("Showing student's grade");
+                    showStudentsGrades(conn, args[1]);
                     break;
                 case "gradebook":
                     break;
@@ -980,7 +982,7 @@ class finalProject {
      *  attempted grade based on points they currently have
      * @param conn
      */
-    public void showStudentsGrades(Connection conn, String username) {
+    public static void showStudentsGrades(Connection conn, String username) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         boolean hasResult = false;
