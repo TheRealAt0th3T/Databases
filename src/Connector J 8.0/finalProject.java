@@ -38,13 +38,10 @@ class finalProject {
                     System.out.println("Selecting class...");
                     if (args.length == 2) {
                         activateClass(conn, args[1], null, null);
-                        System.out.println("Class has been selected!");
                     } else if (args.length == 3) {
                         activateClass(conn, args[1], args[2], null);
-                        System.out.println("Class has been selected!");
                     } else if (args.length == 4) {
                         activateClass(conn, args[1], args[2], args[3]);
-                        System.out.println("Class has been selected!");
                     }
                     break;
                 case "show-class":
@@ -307,6 +304,7 @@ class finalProject {
                             currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
+                            hasNext = rs.next();
                         } else if (recent != null && fullTerm != rs.getString(3) && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
                             currClassID = rs.getInt(1);
                             currClass = rs.getString(2);
@@ -315,10 +313,12 @@ class finalProject {
                             currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
+                            hasNext = rs.next();
                         } else {
                             System.out.println("There are multiple sections for " + courseNum);
+                            hasNext = false;
                         }
-                        hasNext = rs.next();
+                        
                     }
                 } else {
                     currClassID = rs.getInt(1);
@@ -328,7 +328,7 @@ class finalProject {
                     currDescription = rs.getString(5);
                 }
             }
-
+            System.out.println("Class has been selected");
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
