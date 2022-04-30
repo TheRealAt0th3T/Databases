@@ -6,11 +6,11 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 class finalProject {
-    private static int currClassID;
-    private static String currClass;
-    private static String currTerm;
-    private static String currSection;
-    private static String currDescription;
+    static int currClassID = 0;
+    static String currClass = "";
+    static String currTerm = "";
+    static String currSection = "";
+    static String currDescription = "";
 
     public static void main(String[] args) {
         try {
@@ -45,6 +45,8 @@ class finalProject {
                     }
                     break;
                 case "show-class":
+                    System.out.println("Showing active class");
+                    showActiveClass(conn);
                     break;
                 case "show-categories":
                     System.out.println("Showing all categories...");
@@ -124,7 +126,7 @@ class finalProject {
      * Run query function
      * @param conn
      */
-    public static void runQuery(Connection conn) {
+    public void runQuery(Connection conn) {
 
         Statement stmt = null;
         ResultSet rs = null;
@@ -313,6 +315,7 @@ class finalProject {
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
                             hasNext = rs.next();
+                            System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                         } else if (recent != null && fullTerm != rs.getString(3) && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
                             currClassID = rs.getInt(1);
                             currClass = rs.getString(2);
@@ -322,6 +325,7 @@ class finalProject {
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
                             hasNext = rs.next();
+                            System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                         } else {
                             System.out.println("There are multiple sections for " + courseNum);
                             hasNext = false;
@@ -334,6 +338,7 @@ class finalProject {
                     currTerm = rs.getString(3);
                     currSection = Integer.toString(rs.getInt(4));
                     currDescription = rs.getString(5);
+                    System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                 }
             }
             System.out.println("Class has been selected");
@@ -363,36 +368,7 @@ class finalProject {
     }
 
     public static void showActiveClass(Connection conn) {
-        Statement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
-
-        } catch (SQLException ex) {
-            // handle any errors
-            System.err.println("SQLException: " + ex.getMessage());
-            System.err.println("SQLState: " + ex.getSQLState());
-            System.err.println("VendorError: " + ex.getErrorCode());
-        } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                stmt = null;
-            }
-        }
+        System.out.println("Course ID: " + currClassID + "|Course Number: " + currClass + "|Term: " + currTerm + "|Section: " + currSection + "|Description: " + currDescription);
     }
 
     /**
@@ -403,7 +379,7 @@ class finalProject {
         PreparedStatement ps = null;
 
         try {
-            ps.prepareStatement("SELECT categories_name, hasWeight_weight FROM categories" +
+            ps = conn.prepareStatement("SELECT categories_name, hasWeight_weight FROM categories" +
                     "JOIN hasWeight ON categories.categories_id = hasWeight.categories_id;");
             ps.execute();
 
@@ -413,21 +389,16 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
+            if (ps != null) 
+            {
+                try 
+                {
+                    ps.close();
+                } 
+                catch (SQLException sqlEx) 
+                {
                 } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                stmt = null;
+                ps = null;
             }
         }
     }
@@ -450,7 +421,7 @@ class finalProject {
             rs = stmt.executeQuery("SELECT categories_id FROM categories WHERE categories_name =" + name + ";");
 
             ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
-            ps.setInt(1, weight);
+            ps.setInt(1, Integer.parseInt(weight));
             ps.setInt(2, rs.getInt(1));
             ps.execute();
 
@@ -488,7 +459,7 @@ class finalProject {
         ResultSet rs = null;
         try {
             stmt = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments\n" +
-                    "ORDER BY categories_id;")
+                    "ORDER BY categories_id;");
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
@@ -520,7 +491,7 @@ class finalProject {
         Statement check = null;
 
         try {
-            stmt = conn.preparedStatement("insert into assignments" +
+            stmt = conn.prepareStatement("insert into assignments" +
                     "(assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);");
             stmt.setString(1, name);
             stmt.setString(2, descrip);
@@ -529,7 +500,7 @@ class finalProject {
             check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = check.executeQuery("Select categories_id FROM categories WHERE categories_name =" + cat);
             if(rs != null){
-                stmt.setString(4, rs.getInt(1));
+                stmt.setString(4, Integer.toString(rs.getInt(1)));
                 stmt.execute();
             }else{
                 System.out.println("ERROR: Category does not exist.");
@@ -814,7 +785,7 @@ class finalProject {
      *  attempted grade based on points they currently have
      * @param conn
      */
-    public static void showStudentsGrades(Connection conn, String username) {
+    public void showStudentsGrades(Connection conn, String username) {
         Statement stmt = null;
         ResultSet rs = null;
 
@@ -858,7 +829,7 @@ class finalProject {
      *
      * @param conn
      */
-    public static void gradebook(Connection conn) {
+    public void gradebook(Connection conn) {
         PreparedStatement stmt = null;
 
         try {
