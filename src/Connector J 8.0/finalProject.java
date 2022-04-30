@@ -180,9 +180,9 @@ class finalProject {
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("Select c.*, Count(s.class_id) From class c" +
-                "JOIN students s ON s.class_id = c.class_id " +
-                "GROUP BY c.class_id;");
+            rs = stmt.executeQuery("Select c.*, Count(s.class_id) From class c " +
+                " JOIN students s ON s.class_id = c.class_id " +
+                " GROUP BY c.class_id;");
 
             boolean rowsLeft = true;
 
