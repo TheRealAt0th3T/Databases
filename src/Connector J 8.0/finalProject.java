@@ -1061,11 +1061,49 @@ class finalProject {
      */
     public void gradebook(Connection conn) {
         PreparedStatement stmt = null;
-
+        ResultSet rs = null;
+        boolean hasResult = false;
+        int temp = -1;
         try {
-            stmt = conn.prepareStatement("");
+            stmt = conn.prepareStatement("SELECT students_username,students_IDnum, students_firstName, students_LastName, SUM((assignedHW_grade * hasWeight_weight)/100) FROM class" +
+                    "JOIN categories ON categories.class_id = class.class_id" +
+                    "JOIN hasWeight ON hasWeight.categories_id = categories.categories_id" +
+                    "JOIN assignments ON assignments.categories_id = categories.categories_id" +
+                    "JOIN assignedHW ON assignments.assignments_id = assignedHW.assignments_id" +
+                    "JOIN students ON students.students_id = assignedHW.students_id" +
+                    "WHERE class.class_id = ?" +
+                    "GROUP BY students_username, students_IDnum, students_firstName, students_LastName;",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-        } catch (SQLException ex) {
+            String getActive = "SELECT class_id FROM class WHERE isActive = true";
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = stmt.executeQuery(getActive);
+            rs.beforeFirst();
+            if (rs.next()) {
+                temp = rs.getInt(1);
+            }
+
+            stmt.setString(1, temp);
+            hasResult = stmt.execute();
+
+            if (hasResult) {
+                rs = stmt.getResultSet();
+                rs.beforeFirst();
+
+                System.out.println("[FORMAT]");
+                System.out.println("Username | IDnum | FirstName | LastName | Attempted Grade");
+                System.out.println("----------------------------------------------------------\n");
+
+                while (rs.next()) {
+                    System.out.println(
+                            rs.getString(1) + "|" +
+                                    rs.getInt(2) + "|" +
+                                    rs.getString(3) + "|" +
+                                    rs.getString(4) + "|" +
+                                    rs.getInt(5) + "|"
+                    );
+                }
+
+            } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
             System.err.println("SQLState: " + ex.getSQLState());
