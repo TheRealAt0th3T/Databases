@@ -631,41 +631,20 @@ class finalProject {
     public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
         Statement stmt = null;
         PreparedStatement ps = null;
-        PreparedStatement stmtTwo = null;
         ResultSet rs = null;
-        String fn = "";
-        String ln = "";
-        int temp = -1;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_username = " + username);
+                stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            String getActive = "SELECT class_id FROM class WHERE isActive = true";
-            ps = conn.prepareStatement(getActive);
-            boolean hasResult = ps.execute();
+                ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = " + username);
+                rs = ps.execute();
 
-            if (hasResult) {
-                rs = ps.getResultSet();
-                rs.first();
-                temp = rs.getInt(1);
-            }
-
-            if(rs != null){
-                System.out.println("Warning: Student exists.");
-                fn =rs.getString(1);
-                ln = rs.getString(2);
-                if(fn != first || ln != last){
-                    System.out.println("Warning: Student name has differences, updating now...");
-                    ps = conn.prepareStatement("UPDATE students SET students_firstName = " + fn +", students_lastName = " + ln + " WHERE students_username = " + username);
-                    ps.execute();
-                    System.out.println("Warning: Student name is updated.");
+                if(rs != null){
+                    System.out.println("Student Exists.");
+                }else{
+                    System.out.println("Student Does NOT Exists.");
                 }
-                ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?;");
-                ps.setInt(1, temp);
-                ps.setString(2, username);
-                ps.execute();
-                System.out.println("Student was added.");
+
             }else{
                 stmtTwo = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
                         "values (?, ?, ?, ?, ?); ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
