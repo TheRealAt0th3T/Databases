@@ -36,7 +36,7 @@ class finalProject {
                     break;
                 case "select-class":
                     System.out.println("Selecting class...");
-                    activateClass(conn, Integer.parseInt(args[1]), args[2], args[3]);
+                    activateClass(conn, args[1], args[2], args[3]);
                     System.out.println("Class has been selected!");
                     break;
                 case "show-class":
@@ -242,7 +242,7 @@ class finalProject {
         }
     }
 
-    public static void activateClass(Connection conn, int courseNum, String term, String sectionNum) {
+    public static void activateClass(Connection conn, String courseNum, String term, String sectionNum) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         String cond = "";
@@ -280,12 +280,14 @@ class finalProject {
                             currClass = rs.getString(2);
                             currTerm = rs.getString(3);
                             currSection = Integer.toString(rs.getInt(4));
+                            currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                         } else if (Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2,rs.getString(2).length()))) {
                             currClassID = rs.getInt(1);
                             currClass = rs.getString(2);
                             currTerm = rs.getString(3);
                             currSection = Integer.toString(rs.getInt(4));
+                            currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                         }
                         hasNext = rs.next();
@@ -295,6 +297,7 @@ class finalProject {
                     currClass = rs.getString(2);
                     currTerm = rs.getString(3);
                     currSection = Integer.toString(rs.getInt(4));
+                    currDescription = rs.getString(5);
                 }
             }
 
