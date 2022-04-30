@@ -1061,6 +1061,7 @@ class finalProject {
      */
     public void gradebook(Connection conn) {
         PreparedStatement stmt = null;
+        Statement s = null;
         ResultSet rs = null;
         boolean hasResult = false;
         int temp = -1;
@@ -1075,8 +1076,8 @@ class finalProject {
                     "GROUP BY students_username, students_IDnum, students_firstName, students_LastName;",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery(getActive);
+            s = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = s.executeQuery(getActive);
             rs.beforeFirst();
             if (rs.next()) {
                 temp = rs.getInt(1);
