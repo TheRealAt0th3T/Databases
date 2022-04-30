@@ -71,7 +71,7 @@ class finalProject {
                     if(args.length < 2){
                         System.out.println("Showing all students...");
                         showAllStudents(conn);
-                    }else if (args.length > 2){
+                    }else if (args.length > 1){
                         System.out.println("Showing specific student...");
                         showStudents(conn, args[1]);
                     }
