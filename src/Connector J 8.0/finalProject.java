@@ -583,15 +583,11 @@ class finalProject {
             stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt.setString(1, cat);
             hasResult = stmt.execute();
-            System.out.println("HERE");
             
             if (hasResult) {
                 rs = stmt.getResultSet();
                 rs.beforeFirst();
             }
-
-
-            System.out.println("HERE");
 
             if(hasResult && rs.next()){
                 stmtTwo = conn.prepareStatement("insert into assignments" +
