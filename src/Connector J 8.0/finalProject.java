@@ -851,7 +851,7 @@ class finalProject {
             name = name.toLowerCase();
             System.out.println("HERE");
             rs = stmt.executeQuery("SELECT students_id, students_firstName, students_lastName, students_username, students_IDnum FROM students WHERE students_firstName LIKE '%" +
-                    name + "%' OR students_lastName LIKE '%" + name "%' OR students_username LIKE '%" + name + "%';");
+                    name + "%' OR students_lastName LIKE '%" + name + "%' OR students_username LIKE '%" + name + "%';");
             System.out.println("HERE");
 //            ps.setString(1, name);
 //            System.out.println("HERE");
