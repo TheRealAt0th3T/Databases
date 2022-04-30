@@ -767,7 +767,11 @@ class finalProject {
             boolean hasResults = ps.execute();
             
             if(hasResults){
-                System.out.println("NOT EMPTY");
+                rs = ps.getResultSet();
+                int classID = rs.getInt(1);
+                String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
+                        " WHERE class_courseNum = " + classID + ";";
+                System.out.println(temp);
             }
 
             /*
