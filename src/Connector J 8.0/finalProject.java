@@ -6,11 +6,8 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 class finalProject {
-    static int currClassID = 0;
-    static String currClass = "";
-    static String currTerm = "";
-    static String currSection = "";
-    static String currDescription = "";
+
+    static CurrData currData;
 
     public static void main(String[] args) {
         try {
@@ -307,21 +304,13 @@ class finalProject {
 
                     while (hasNext) {
                         if (recent == null) {
-                            currClassID = rs.getInt(1);
-                            currClass = rs.getString(2);
-                            currTerm = rs.getString(3);
-                            currSection = Integer.toString(rs.getInt(4));
-                            currDescription = rs.getString(5);
+                            currData = new CurrData(rs.getInt(1), rs.getString(2), rs.getString(3), Integer.toString(rs.getInt(4)), rs.getString(5));
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
                             hasNext = rs.next();
                             System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                         } else if (recent != null && fullTerm != rs.getString(3) && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
-                            currClassID = rs.getInt(1);
-                            currClass = rs.getString(2);
-                            currTerm = rs.getString(3);
-                            currSection = Integer.toString(rs.getInt(4));
-                            currDescription = rs.getString(5);
+                            currData = new CurrData(rs.getInt(1), rs.getString(2), rs.getString(3), Integer.toString(rs.getInt(4)), rs.getString(5));
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
                             hasNext = rs.next();
@@ -333,11 +322,7 @@ class finalProject {
                         
                     }
                 } else {
-                    currClassID = rs.getInt(1);
-                    currClass = rs.getString(2);
-                    currTerm = rs.getString(3);
-                    currSection = Integer.toString(rs.getInt(4));
-                    currDescription = rs.getString(5);
+                    currData = new CurrData(rs.getInt(1), rs.getString(2), rs.getString(3), Integer.toString(rs.getInt(4)), rs.getString(5));
                     System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                 }
             }
@@ -368,7 +353,7 @@ class finalProject {
     }
 
     public static void showActiveClass(Connection conn) {
-        System.out.println("Course ID: " + currClassID + "|Course Number: " + currClass + "|Term: " + currTerm + "|Section: " + currSection + "|Description: " + currDescription);
+        System.out.println("Course ID: " + currData.getClassId() + "|Course Number: " + currData.getCurrClass() + "|Term: " + currData.getCurrTerm()+ "|Section: " + currData.getCurrSection() + "|Description: " + currData.getCurrDesc());
     }
 
     /**
@@ -560,7 +545,7 @@ class finalProject {
                     System.out.println("WARNING: " + username + "'s last name is being updated.");
                     stmt.execute();
                 }
-                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currClass + "WHERE students_IDnum =" + studentid);
+                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currData.getCurrClass() + "WHERE students_IDnum =" + studentid);
                 stmt.execute();
 
             }else{ //student doesn't exist
@@ -570,7 +555,7 @@ class finalProject {
                 stmt.setString(2, last);
                 stmt.setString(3, username);
                 stmt.setInt(4, Integer.parseInt(studentid));
-                stmt.setString(5, Integer.toString(currClassID));
+                stmt.setString(5, Integer.toString(currData.getClassId()));
                 stmt.execute();
             }
 
@@ -612,7 +597,7 @@ class finalProject {
             rs = stmt.executeQuery("SELECT * FROM students WHERE students_username =" + username);
 
             if(rs != null){ //therefore student exists
-                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currClass + "WHERE username =" + username);
+                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currData.getCurrClass() + "WHERE username =" + username);
                 stmt.execute();
             }else{
                 System.out.println("ERROR: This user does not exist.");
@@ -654,11 +639,11 @@ class finalProject {
         try {
             String temp = "SELECT * FROM class" +
                     "JOIN students on students.class_id = class.class_id" +
-                    "WHERE class_courseNum = " + currClass;
-            if(currTerm != null){
-                temp += "AND class_term = " + currTerm;
-                if(currSection != null){ //if sectionNUM exists
-                    temp += "and class_sectionNum = " + currSection;
+                    "WHERE class_courseNum = " + currData.getCurrClass();
+            if(currData.getCurrTerm() != null){
+                temp += "AND class_term = " + currData.getCurrTerm() ;
+                if(currData.getCurrSection()  != null){ //if sectionNUM exists
+                    temp += "and class_sectionNum = " + currData.getCurrSection();
                 }
             }
 
@@ -855,6 +840,40 @@ class finalProject {
         }
     }
 
+}
 
+class CurrData{
+    private int currClassId;
+    private String currClass;
+    private String currTerm;
+    private String currSection;
+    private String currDesc;
 
+    public CurrData(int num, String className, String term, String section, String desc) {
+        this.currClassId = num;
+        this.currClass = className;
+        this.currTerm = term;
+        this.currSection = section;
+        this.currDesc = desc;
+    }
+
+    public int getClassId() {
+        return this.currClassId;
+    }
+
+    public String getCurrDesc(){ 
+        return this.currDesc;
+    }
+
+    public String getCurrClass(){ 
+        return this.currClass;
+    }
+
+    public String getCurrTerm(){ 
+        return this.currTerm;
+    }
+
+    public String getCurrSection(){ 
+        return this.currSection;
+    }
 }
