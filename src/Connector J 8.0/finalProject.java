@@ -578,12 +578,6 @@ class finalProject {
         ResultSet rs = null;
 
         try {
-            stmtTwo = conn.prepareStatement("insert into assignments" +
-                    " (assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmtTwo.setString(1, name);
-            stmtTwo.setString(2, cat);
-            stmtTwo.setString(3, descrip);
-
             //check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt.setString(1, cat);
@@ -591,7 +585,12 @@ class finalProject {
             rs = stmt.getResultSet();
             rs.first();
             if(rs != null){
-                stmtTwo.setString(4, Integer.toString(rs.getInt(1)));
+                stmtTwo = conn.prepareStatement("insert into assignments" +
+                    " (assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                stmtTwo.setString(1, name);
+                stmtTwo.setInt(3, Integer.parseInt(points));
+                stmtTwo.setString(2, descrip);
+                stmtTwo.setInt(4, rs.getInt(1));
                 stmtTwo.execute();
                 System.out.println("Assignment was added.");
             }else{
