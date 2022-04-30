@@ -269,8 +269,27 @@ class finalProject {
                 rs.first();
                 if (whichCond == 2 && rs.next()) {
                     System.out.println("There are multiple sections for " + courseNum + " " + term);
-                } else if (whichCond == 1) {
+                } else if (whichCond == 1 && rs.next()) {
+                    rs.first();
+                    String recent = "";
+                    boolean hasNext = true;
 
+                    while (hasNext) {
+                        if (recent == null) {
+                            currClassID = rs.getInt(1);
+                            currClass = rs.getString(2);
+                            currTerm = rs.getString(3);
+                            currSection = Integer.toString(rs.getInt(4));
+                            recent = rs.getString(2).substring(2, rs.getString(2).length());
+                        } else if (Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2,rs.getString(2).length()))) {
+                            currClassID = rs.getInt(1);
+                            currClass = rs.getString(2);
+                            currTerm = rs.getString(3);
+                            currSection = Integer.toString(rs.getInt(4));
+                            recent = rs.getString(2).substring(2, rs.getString(2).length());
+                        }
+                        hasNext = rs.next();
+                    }
                 } else {
                     currClassID = rs.getInt(1);
                     currClass = rs.getString(2);
@@ -674,7 +693,7 @@ class finalProject {
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT assignments_pointValue FROM assignments WHERE assignments_name =" + assignmentName";");
+            rs = stmt.executeQuery("SELECT assignments_pointValue FROM assignments WHERE assignments_name =" + assignmentName + ";");
 
             if(rs.getInt(1) > Integer.parseInt(grade)){
                 System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(1) + ").");
