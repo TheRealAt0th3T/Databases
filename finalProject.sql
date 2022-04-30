@@ -2,29 +2,6 @@ CREATE DATABASE IF NOT EXISTS finalProject;
 USE finalProject;
 #DROP DATABASE finalProject;
 
-Select * From class
-JOIN categories ON class.class_id = categories.class_id
-JOIN assignments ON assignments.categories_id = categories.categories_id;
-
-SELECT * FROM class
-JOIN students on students.class_id = class.class_id
-JOIN assignedHW on assignedHW.students_id = students.students_id;
-
-##gets students within a specific class
-SELECT students.students_username, students.students_IDnum, students.students_firstName, students.students_lastName FROM class
-JOIN students ON students.class_id = class.class_id
-WHERE class_courseNum = "CS410" and class_sectionNum = "2";
-
-##getting all columns for grades
-SELECT hasWeight_weight, assignedHW_grade, assignments.assignments_id, 
-students.students_username, students.students_IDnum, 
-students.students_firstName, students.students_lastName FROM class
-left JOIN categories ON categories.class_id = class.class_id
-left JOIN hasWeight ON hasWeight.categories_id = categories.categories_id
-left JOIN assignments ON assignments.categories_id = categories.categories_id
-left JOIN assignedHW ON assignedHW.assignments_id = assignments.assignments_id
-left JOIN students ON students.students_id = assignedHW.students_id
-WHERE class_courseNum = "CS410" AND class_sectionNum = "2";
 
 CREATE TABLE class(
 	class_id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -48,7 +25,7 @@ CREATE TABLE students (
 CREATE TABLE categories(
 	categories_id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	categories_name VARCHAR(50) NOT NULL,
-    class_id INTEGER NOT NULL, 
+    class_id INTEGER, 
     
 	FOREIGN KEY (class_id) REFERENCES class (class_id),
     INDEX (class_id)
@@ -72,7 +49,7 @@ CREATE TABLE assignments(
 CREATE TABLE hasWeight(
 	hasWeight_id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	hasWeight_weight INTEGER NOT NULL,
-    class_id INTEGER NOT NULL, 
+    class_id INTEGER, 
     categories_id INTEGER NOT NULL, 
 	FOREIGN KEY (class_id) REFERENCES class (class_id),
     INDEX (class_id),
