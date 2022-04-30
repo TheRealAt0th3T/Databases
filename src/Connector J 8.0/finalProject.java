@@ -804,12 +804,19 @@ class finalProject {
                 num = rs.getString(1);
                 //String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
                  //       " WHERE class_courseNum = " + num + ";";
-                ps = conn.prepareStatement("SELECT * FROM class JOIN students on students.class_id = class.class_id WHERE class_courseNum = ? AND class_sectionNum = ? AND class_term = ?;");
+                ps = conn.prepareStatement("SELECT students_id, students_firstName, students_lastName, students_username, students_IDnum FROM class JOIN students on students.class_id = class.class_id WHERE class_courseNum = ? AND class_sectionNum = ? AND class_term = ?;");
                 ps.setString(1, num);
                 ps.setInt(2, rs.getInt(2));
                 ps.setString(3, rs.getString(3));
                 ps.execute();
                 System.out.println("HERE");
+
+                rs = ps.getResultSet();
+                rs.beforeFirst();
+                while (rs.next()) {
+                    System.out.println(rs.getInt(1) + " , " + rs.getString(2) + " , " + rs.getString(3) + " , " + rs.getString(4) + ", " + rs.getInt(5));
+                }
+
             }
 
             /*
