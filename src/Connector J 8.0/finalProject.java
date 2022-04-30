@@ -632,6 +632,7 @@ class finalProject {
         Statement stmt = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        ResultSet student = null;
         boolean hasResults = false;
         int temp = -1;
 
@@ -650,7 +651,13 @@ class finalProject {
                 ps.setString(1, username);
                 hasResults = ps.execute();
 
-                if(hasResults){ //------------------------------------------------------------------------------------------
+                if (hasResults) {
+                    student = ps.getResultSet();
+                    student.first();
+                }
+                
+
+                if(student.getString(1) != null){ //------------------------------------------------------------------------------------------
                     System.out.println("Student Exists. Adding to class now...");
                     ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?");
                     ps.setInt(1, temp);
