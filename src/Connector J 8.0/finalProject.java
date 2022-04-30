@@ -330,6 +330,7 @@ class finalProject {
                         System.out.println("Class has been selected");
                     }
                 } else {
+                    currClassId = rs.getInt(1);
                     setActive = conn.prepareStatement("UPDATE class set isActive = true where class_id = ?");
                     setActive.setInt(1, currClassId);
                     setActive.execute();
