@@ -434,7 +434,7 @@ class finalProject {
 
         try {
             ps = conn.prepareStatement("SELECT categories_name, hasWeight_weight FROM categories" +
-                    "JOIN hasWeight ON categories.categories_id = hasWeight.categories_id;");
+                    " JOIN hasWeight ON categories.categories_id = hasWeight.categories_id;");
             ps.execute();
 
         } catch (SQLException ex) {
@@ -513,7 +513,7 @@ class finalProject {
         ResultSet rs = null;
         try {
             stmt = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments" +
-                    "ORDER BY categories_id;");
+                    " ORDER BY categories_id;");
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
@@ -622,7 +622,7 @@ class finalProject {
                 stmt.execute();
 
             }else{ //student doesn't exist
-                stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id)" +
+                stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
                         "values (?, ?, ?, ?, ?); ");
                 stmt.setString(1, first);
                 stmt.setString(2, last);
@@ -720,8 +720,8 @@ class finalProject {
             rs = stmt.executeQuery(getActive);
 
             String temp = "SELECT * FROM class" +
-                    "JOIN students on students.class_id = class.class_id" +
-                    "WHERE class_courseNum = " + rs.getString(1);
+                    " JOIN students on students.class_id = class.class_id" +
+                    " WHERE class_courseNum = " + rs.getString(1);
 
             if(rs.getString(3) != null){
                 temp += "AND class_term = " + rs.getString(3);
@@ -766,8 +766,8 @@ class finalProject {
         try {
             name = name.toLowerCase();
             String temp = "SELECT * FROM class" +
-                    "JOIN students on students.class_id = class.class_id" +
-                    "WHERE students.students_name LIKE '%" + name + "%' OR students.students_username LIKE '%" + name + "%';";
+                    " JOIN students on students.class_id = class.class_id" +
+                    " WHERE students.students_name LIKE '%" + name + "%' OR students.students_username LIKE '%" + name + "%';";
 
             stmt = conn.prepareStatement(temp);
             stmt.execute();
@@ -810,10 +810,10 @@ class finalProject {
                 System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(1) + ").");
             }else{
                 ps = conn.prepareStatement("UPDATE students" +
-                        "JOIN assignedHW on assignedHW.students_id = students.students_id" +
-                        "JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
-                        "SET assignedHW.assignedHW_grade = " + grade + "WHERE students.students_username =" + username +
-                        "AND assignments.assignments_name = " + assignmentName + ";");
+                        " JOIN assignedHW on assignedHW.students_id = students.students_id" +
+                        " JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
+                        " SET assignedHW.assignedHW_grade = " + grade + "WHERE students.students_username =" + username +
+                        " AND assignments.assignments_name = " + assignmentName + ";");
             }
 
         } catch (SQLException ex) {
