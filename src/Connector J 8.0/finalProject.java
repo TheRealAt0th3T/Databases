@@ -327,14 +327,16 @@ class finalProject {
                         setActive = conn.prepareStatement("UPDATE class set isActive = true where class_id = ?");
                         setActive.setBoolean(1, true);
                         setActive.execute();
+                        System.out.println("Class has been selected");
                     }
                 } else {
                     setActive = conn.prepareStatement("UPDATE class set isActive = true where class_id = ?");
                     setActive.setInt(1, currClassId);
                     setActive.execute();
+                    System.out.println("Class has been selected");
                 }
             }
-            System.out.println("Class has been selected");
+            
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
