@@ -295,6 +295,7 @@ class finalProject {
                 } else if (whichCond == 1 && rs.next()) {
                     rs.first();
                     String recent = null;
+                    String fullTerm = null;
                     boolean hasNext = true;
 
                     while (hasNext) {
@@ -305,14 +306,15 @@ class finalProject {
                             currSection = Integer.toString(rs.getInt(4));
                             currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
-                            System.out.println(recent);
-                        } else if (recent != null && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
+                        } else if (recent != null && fullTerm != rs.getString(3) && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
                             currClassID = rs.getInt(1);
                             currClass = rs.getString(2);
                             currTerm = rs.getString(3);
                             currSection = Integer.toString(rs.getInt(4));
                             currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
+                        } else {
+                            System.out.println("There are multiple sections for " + courseNum + " " + term);
                         }
                         hasNext = rs.next();
                     }
