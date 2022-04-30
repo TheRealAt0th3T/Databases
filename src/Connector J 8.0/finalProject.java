@@ -1099,7 +1099,7 @@ class finalProject {
                 while (rs.next()) {
                     System.out.println(
                             rs.getString(1) + "|" +
-                                    rs.getInt(2) + "|" +
+                                    rs.getDouble(2) + "|" +
                                     rs.getString(3) + "|" +
                                     rs.getString(4) + "|" +
                                     rs.getInt(5) + "|"
