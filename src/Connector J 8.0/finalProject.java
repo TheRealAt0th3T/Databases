@@ -630,6 +630,7 @@ class finalProject {
      */
     public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
         Statement stmt = null;
+        Statement stmt2 = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         ResultSet student = null;
@@ -637,7 +638,7 @@ class finalProject {
 
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                rs = stmt.executeQuery("Select class_id from class where isActive = true");
+                rs = stmt.executeQuery("Select class_id from class where isActive = true;");
                 //System.out.println("HERE");
 
                 if(rs != null){ //there exists a class
@@ -647,18 +648,11 @@ class finalProject {
                 }
 
                 ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                ps.setString(1, username);
-                boolean hasResults = ps.execute();
-
-                if (hasResults) {
-                    student = ps.getResultSet();
-                    if (student == null) {
-                        System.out.println("im in here");
-                    }
-                }
+                stmt2 = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                String str = "SELECT students_firstName, students_lastName FROM students WHERE students_username = " + username + ";";
+                student = stmt2.executeQuery(str);
                 
-
-                if(student.getString(1) != null){ //------------------------------------------------------------------------------------------
+                if(student != null){ //------------------------------------------------------------------------------------------
                     System.out.println("Student Exists. Adding to class now...");
                     ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?");
                     ps.setInt(1, temp);
