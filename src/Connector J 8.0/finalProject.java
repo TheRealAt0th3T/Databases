@@ -757,6 +757,11 @@ class finalProject {
             String getActive = "SELECT class_courseNum, class_sectionNum, class_term FROM class WHERE isActive = true";
             rs = stmt.executeQuery(getActive);
 
+            if(rs != null){
+                System.out.println("NOT EMPTY");
+            }
+
+            /*
             String temp = "SELECT * FROM class" +
                     " JOIN students on students.class_id = class.class_id" +
                     " WHERE class_courseNum = " + rs.getString(1);
@@ -777,7 +782,7 @@ class finalProject {
                 System.out.println("Class: " + rs.getString(1) + ", Section: " + rs.getInt(2) + ", Term: " + rs.getString(3));
                 hasNext = rs.next();
             }
-
+            */
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
