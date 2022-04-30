@@ -849,7 +849,7 @@ class finalProject {
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             name = name.toLowerCase();
-            
+
             rs = stmt.executeQuery("SELECT students_id, students_firstName, students_lastName, students_username, students_IDnum FROM students WHERE students_firstName LIKE '%" +
                     name + "%' OR students_lastName LIKE '%" + name + "%' OR students_username LIKE '%" + name + "%';");
 
@@ -890,8 +890,11 @@ class finalProject {
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT assignments_pointValue FROM assignments WHERE assignments_name =" + assignmentName + ";");
+            ps = conn.prepareStatement("JOIN assignedHW ON assignedHW.assignments_id = assignments.assignments_id" +
+                    "JOIN students ON assignedHW.students_id = students.students_id WHERE assignments_name = ? AND students_username = ?;");
+            ps.setString(1, assignmentName);
 
+            /*
             if(rs.getInt(1) > Integer.parseInt(grade)){
                 System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(1) + ").");
             }else{
@@ -901,7 +904,7 @@ class finalProject {
                         " SET assignedHW.assignedHW_grade = " + grade + "WHERE students.students_username =" + username +
                         " AND assignments.assignments_name = " + assignmentName + ";");
             }
-
+            */
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
