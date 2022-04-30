@@ -637,7 +637,7 @@ class finalProject {
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 rs = stmt.executeQuery("Select class_id from class where isActive = true");
-                //System.out.println("HERE");
+                System.out.println("HERE");
 
                 if(rs != null){ //there exists a class
                     //rs.first();
