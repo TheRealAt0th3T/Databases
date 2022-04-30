@@ -735,7 +735,7 @@ class finalProject {
             }
 
             if(hasResult && rs.next()){ //therefore student exists
-                stmt3 = conn.prepareStatement("UPDATE students SET class_id = ? WHERE username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                stmt3 = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 stmt3.setInt(1, temp);
                 stmt3.setString(2, username);
                 stmt3.execute();
