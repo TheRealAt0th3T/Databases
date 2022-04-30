@@ -492,6 +492,7 @@ class finalProject {
 
             if (hasResult) {
                 rs = ps.getResultSet();
+                rs.first();
                 ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
                 ps.setInt(1, Integer.parseInt(weight));
                 ps.setInt(2, rs.getInt(1));
