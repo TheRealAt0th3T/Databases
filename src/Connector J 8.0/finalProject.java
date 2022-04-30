@@ -24,15 +24,20 @@ class finalProject {
             switch(args[0]) {
                 case "new-class":
                     System.out.println("Creating new class...");
+                    System.out.println("\n\n[Result Format]\n\n");
+                    System.out.println("ID:Course Number:Term:Section:Description\n\n");
                     createClass(conn, args[1], args[2], args[3], args[4]);
                     break;
                 case "list-classes":
                     System.out.println("listing classes...");
+                    System.out.println("\n\n[Result Format]\n\n");
+                    System.out.println("ID:Course Number:Term:Section:Description:NumberOfStudents\n\n");
                     listClasses(conn);
                     break;
                 case "select-class":
                     System.out.println("Selecting class...");
                     activateClass(conn, Integer.parseInt(args[1]), args[2], args[3]);
+                    System.out.println("Class has been selected!");
                     break;
                 case "show-class":
                     break;
@@ -249,6 +254,8 @@ class finalProject {
                 rs.first();
                 if (whichCond == 2 && rs.next()) {
                     System.out.println("There are multiple sections for " + courseNum + " " + term);
+                } else if (whichCond == 1) {
+
                 } else {
                     currClassID = rs.getInt(1);
                     currClass = rs.getString(2);
