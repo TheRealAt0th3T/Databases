@@ -812,7 +812,7 @@ class finalProject {
                 System.out.println("HERE");
 
                 rs = ps.getResultSet();
-                rs.beforeFirst();
+                //rs.beforeFirst();
                 while (rs.next()) {
                     System.out.println(rs.getInt(1) + " , " + rs.getString(2) + " , " + rs.getString(3) + " , " + rs.getString(4) + ", " + rs.getInt(5));
                 }
