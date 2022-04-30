@@ -852,40 +852,12 @@ class finalProject {
             System.out.println("HERE");
             rs = stmt.executeQuery("SELECT students_id, students_firstName, students_lastName, students_username, students_IDnum FROM students WHERE students_firstName LIKE '%" +
                     name + "%' OR students_lastName LIKE '%" + name + "%' OR students_username LIKE '%" + name + "%';");
-            System.out.println("HERE");
-//            ps.setString(1, name);
-//            System.out.println("HERE");
-//            ps.setString(2, name);
-//            System.out.println("HERE");
-//            ps.setString(3, name);
-//            System.out.println("HERE");
-//            ps.execute();
-//            System.out.println("HERE");
-
-//            rs = ps.getResultSet();
 
             System.out.println("StudentID, FirstName, LastName, Username, StudentIDnum");
             while (rs.next()) {
                 System.out.println(rs.getInt(1) + " , " + rs.getString(2) + " , " + rs.getString(3) + " , " + rs.getString(4) + ", " + rs.getDouble(5));
             }
 
-            /*
-            String temp = "SELECT * FROM class" +
-                    " JOIN students on students.class_id = class.class_id" +
-                    " WHERE students.students_name LIKE '%" + name + "%' OR students.students_username LIKE '%" + name + "%';";
-
-            rs = stmt.executeQuery(temp);
-
-            boolean hasNext = true;
-            rs.first();
-            while(hasNext){
-                System.out.println("ClassID: " + rs.getInt(1) + ", CourseNum: " + rs.getString(2) + ", Term: " + rs.getString(3) +
-                ", SectionNum: " + rs.getInt(4) + ", Description: " + rs.getString(5) + ", FirstName: " +
-                rs.getString(7) + ", LastName: " + rs.getString(8) + "Username: " + rs.getString(9) + ", StudentIDNum: " + rs.getInt(10));
-                hasNext = rs.next();
-            }
-
-            */
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
