@@ -899,14 +899,25 @@ class finalProject {
 
             //System.out.println("HERE");
             rs = ps.getResultSet();
-            //while(rs.next()) {
+            while(rs.next()) {
                 if (rs.getInt(2) < Integer.parseInt(grade)) {
                     System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(2) + ").");
                     System.out.println("Setting points to max value.");
-
-
+                    rs = stmt.executeQuery("UPDATE students" +
+                            " JOIN assignedHW on assignedHW.students_id = students.students_id" +
+                            " JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
+                            " SET assignedHW.assignedHW_grade = " + rs.getInt(2) + "WHERE students.students_username =" + username +
+                            " AND assignments.assignments_name = " + assignmentName + ";");
+                }else{
+                    System.out.println("Updating...");
+                    rs = stmt.executeQuery("UPDATE students" +
+                            " JOIN assignedHW on assignedHW.students_id = students.students_id" +
+                            " JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
+                            " SET assignedHW.assignedHW_grade = " + grade + "WHERE students.students_username =" + username +
+                            " AND assignments.assignments_name = " + assignmentName + ";");
                 }
-            //}
+                System.out.println("Grade is updated.");
+            }
 
             /*
             if(rs.getInt(1) > Integer.parseInt(grade)){
