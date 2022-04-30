@@ -760,7 +760,7 @@ class finalProject {
         Statement stmt = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
-        int num = -1;
+        String num = -1;
         try {
             //stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             String getActive = "SELECT class_courseNum, class_sectionNum, class_term FROM class WHERE isActive = true";
@@ -771,8 +771,8 @@ class finalProject {
             if(hasResults){
                 rs = ps.getResultSet();
                 //int classID = rs.getInt(1);
-                rs.first();
-                num = rs.getInt(1);
+                rs.beforeFirst();
+                num = rs.getString(1);
                 String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
                         " WHERE class_courseNum = " + num + ";";
                 System.out.println("HERE");
