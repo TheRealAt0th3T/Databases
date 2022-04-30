@@ -903,18 +903,26 @@ class finalProject {
                 if (rs.getInt(2) < Integer.parseInt(grade)) {
                     System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(2) + ").");
                     System.out.println("Setting points to max value.");
-                    rs = stmt.executeQuery("UPDATE students" +
+                    ps = conn.prepareStatement("UPDATE students" +
                             " JOIN assignedHW on assignedHW.students_id = students.students_id" +
                             " JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
-                            " SET assignedHW.assignedHW_grade = " + rs.getInt(2) + "WHERE students.students_username =" + username +
-                            " AND assignments.assignments_name = " + assignmentName + ";");
+                            " SET assignedHW.assignedHW_grade = ? WHERE students.students_username = ?" +
+                            " AND assignments.assignments_name = ?;");
+                    ps.setInt(1, rs.getInt(2));
+                    ps.setString(2, username);
+                    ps.setString(3, assignmentName);
+                    ps.execute;
                 }else{
                     System.out.println("Updating...");
-                    rs = stmt.executeQuery("UPDATE students" +
+                    ps = conn.prepareStatement("UPDATE students" +
                             " JOIN assignedHW on assignedHW.students_id = students.students_id" +
                             " JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
-                            " SET assignedHW.assignedHW_grade = " + grade + "WHERE students.students_username =" + username +
-                            " AND assignments.assignments_name = " + assignmentName + ";");
+                            " SET assignedHW.assignedHW_grade = ? WHERE students.students_username = ?" +
+                            " AND assignments.assignments_name = ?;");
+                    ps.setInt(1, Integer.parseInt(grade));
+                    ps.setString(2, username);
+                    ps.setString(3, assignmentName);
+                    ps.execute;
                 }
                 System.out.println("Grade is updated.");
             }
