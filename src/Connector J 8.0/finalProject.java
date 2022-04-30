@@ -477,6 +477,7 @@ class finalProject {
         Statement stmt = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
+        boolean hasResult = false;
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -487,12 +488,15 @@ class finalProject {
 
             ps = conn.prepareStatement("SELECT categories_id FROM categories WHERE categories_name = ? ;");
             ps.setString(1, name);
-            ps.execute();
+            hasResult = ps.execute();
 
-            ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
-            ps.setInt(1, Integer.parseInt(weight));
-            ps.setInt(2, rs.getInt(1));
-            ps.execute();
+            if (hasResult) {
+                rs = ps.getResultSet();
+                ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
+                ps.setInt(1, Integer.parseInt(weight));
+                ps.setInt(2, rs.getInt(1));
+                ps.execute();
+            }
 
             System.out.println("Category was added.");
 
