@@ -640,8 +640,8 @@ class finalProject {
                 hasResults = ps.execute();
 
                 if(hasResults){
-                    rs.first();
-                    int temp = ps.getResultSet(1);
+                    //rs.first();
+                    //int temp = ps.getResultSet(1);
                     System.out.println("current Class id is:" + temp);
                 }
 
