@@ -6,13 +6,13 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 class finalProject {
-    private int currClassID;
-    private String currClass;
-    private String currTerm;
-    private String currSection;
-    private String currDescription;
+    static int currClassID;
+    static String currClass;
+    static String currTerm;
+    static String currSection;
+    static String currDescription;
 
-    public void main(String[] args) {
+    public static void main(String[] args) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             System.out.println();
@@ -104,7 +104,7 @@ class finalProject {
      * @param password
      * @return
      */
-    public Connection makeConnection(String port, String database, String password) {
+    public static Connection makeConnection(String port, String database, String password) {
         try {
             Connection conn = DriverManager.getConnection(
 						"jdbc:mysql://localhost:" + port+ "/" + database+
@@ -174,7 +174,7 @@ class finalProject {
         }
     }
 
-    public void createClass(Connection conn, String num, String term, String sectionNum, String description) {
+    public static void createClass(Connection conn, String num, String term, String sectionNum, String description) {
         
         PreparedStatement stmt = null;
 
@@ -209,7 +209,7 @@ class finalProject {
         }
     }
 
-    public void listClasses(Connection conn) {
+    public static void listClasses(Connection conn) {
         Statement stmt = null;
         ResultSet rs = null;
 
@@ -257,7 +257,7 @@ class finalProject {
         }
     }
 
-    public void activateClass(Connection conn, String courseNum, String term, String sectionNum) {
+    public static void activateClass(Connection conn, String courseNum, String term, String sectionNum) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         String cond = "";
@@ -367,15 +367,15 @@ class finalProject {
         }
     }
 
-    public void showActiveClass(Connection conn) {
-        System.out.println("Course ID: " + this.currClassID + "|Course Number: " + this.currClass + "|Term: " + this.currTerm + "|Section: " + this.currSection + "|Description: " + this.currDescription);
+    public static void showActiveClass(Connection conn) {
+        System.out.println("Course ID: " + currClassID + "|Course Number: " + currClass + "|Term: " + currTerm + "|Section: " + currSection + "|Description: " + currDescription);
     }
 
     /**
      * list all categories and their weights
      * @param conn
      */
-    public void showCategories(Connection conn) {
+    public static void showCategories(Connection conn) {
         PreparedStatement ps = null;
 
         try {
@@ -407,7 +407,7 @@ class finalProject {
      * Adding a new category, no reference to a class
      * @param conn
      */
-    public void addCategory(Connection conn, String name, String weight) {
+    public static void addCategory(Connection conn, String name, String weight) {
         Statement stmt = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
@@ -454,7 +454,7 @@ class finalProject {
      * Showing list of assignments, their name, pointvalue, all in order by the category they belong to
      * @param conn
      */
-    public void showAssignment(Connection conn) {
+    public static void showAssignment(Connection conn) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
@@ -485,7 +485,7 @@ class finalProject {
         }
     }
 
-    public void addAssignment(Connection conn, String name, String cat, String descrip, String points) {
+    public static void addAssignment(Connection conn, String name, String cat, String descrip, String points) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Statement check = null;
@@ -537,7 +537,7 @@ class finalProject {
      *
      * @param conn
      */
-    public void addStudent(Connection conn, String username, String studentid, String last, String first) {
+    public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
         PreparedStatement stmt = null;
         Statement checkStmt = null;
         ResultSet rs = null;
@@ -604,7 +604,7 @@ class finalProject {
      * adding existing student to current class, if not existing then fails
      * @param conn
      */
-    public void editStudent(Connection conn, String username) {
+    public static void editStudent(Connection conn, String username) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -647,7 +647,7 @@ class finalProject {
      * showing ALL students in currClass
      * @param conn
      */
-    public void showAllStudents(Connection conn) {
+    public static void showAllStudents(Connection conn) {
 
         PreparedStatement stmt = null;
 
@@ -691,7 +691,7 @@ class finalProject {
      * showing specific students via their name/username, regardless if in currClass
      * @param conn
      */
-    public void showStudents(Connection conn, String name) {
+    public static void showStudents(Connection conn, String name) {
 
         PreparedStatement stmt = null;
 
@@ -729,7 +729,7 @@ class finalProject {
      * assign assignment's grade for student, replace student's grade if exists, if new grade exceeds maxpoints, print warning and set to max
      * @param conn
      */
-    public void gradeAssignment(Connection conn, String assignmentName, String username, String grade) {
+    public static void gradeAssignment(Connection conn, String assignmentName, String username, String grade) {
         Statement stmt = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
