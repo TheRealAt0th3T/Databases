@@ -646,18 +646,6 @@ class finalProject {
                     System.out.println("Student Does NOT Exists.");
                 }
 
-            }else{
-                stmtTwo = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
-                        "values (?, ?, ?, ?, ?); ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                stmtTwo.setString(1, first);
-                stmtTwo.setString(2, last);
-                stmtTwo.setString(3, username);
-                stmtTwo.setInt(4, Integer.parseInt(studentid));
-                stmtTwo.setInt(5, temp);
-                stmtTwo.execute();
-                System.out.println("Student was created and added.");
-            }
-
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
