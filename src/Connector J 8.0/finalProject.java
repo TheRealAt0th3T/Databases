@@ -582,8 +582,6 @@ class finalProject {
             stmt.setString(1, name);
             stmt.setString(2, cat);
             stmt.setString(3, descrip);
-            stmt.setInt(4, Integer.parseInt(points));
-            stmt.execute();
 
             //check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?");
