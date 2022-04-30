@@ -633,7 +633,6 @@ class finalProject {
         PreparedStatement ps = null;
         ResultSet rs = null;
         ResultSet student = null;
-        boolean hasResults = false;
         int temp = -1;
 
         try {
@@ -649,7 +648,7 @@ class finalProject {
 
                 ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 ps.setString(1, username);
-                hasResults = ps.execute();
+                boolean hasResults = ps.execute();
 
                 if (hasResults) {
                     student = ps.getResultSet();
