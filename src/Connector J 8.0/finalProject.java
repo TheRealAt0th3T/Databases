@@ -801,16 +801,13 @@ class finalProject {
             boolean hasResults = ps.execute();
 
             if(hasResults){
-                System.out.println("HERE");
                 rs = ps.getResultSet();
-                System.out.println("HERE");
-                //rs.beforeFirst();
-                //System.out.println("HERE");
                 rs.next();
-                System.out.println("HERE");
                 num = rs.getString(1);
                 String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
                         " WHERE class_courseNum = " + num + ";";
+                ps = conn.prepareStatement(temp);
+                ps.execute();
                 System.out.println("HERE");
             }
 
