@@ -850,7 +850,7 @@ class finalProject {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             name = name.toLowerCase();
             System.out.println("HERE");
-            ps = conn.prepareStatement("SELECT students_id, students_firstName, students_lastName, students_username, students_IDnum FROM students WHERE students_firstName LIKE '%?%' OR students_lastName LIKE '%?%' OR students_username LIKE '%?%';");
+            ps = conn.prepareStatement("SELECT students_id, students_firstName, students_lastName, students_username, students_IDnum FROM students WHERE students_firstName LIKE \'%?%\' OR students_lastName LIKE \'%?%\' OR students_username LIKE \'%?%\';");
             System.out.println("HERE");
             ps.setString(1, name);
             System.out.println("HERE");
@@ -862,7 +862,7 @@ class finalProject {
             System.out.println("HERE");
 
             rs = ps.getResultSet();
-            
+
             System.out.println("StudentID, FirstName, LastName, Username, StudentIDnum");
             while (rs.next()) {
                 System.out.println(rs.getInt(1) + " , " + rs.getString(2) + " , " + rs.getString(3) + " , " + rs.getString(4) + ", " + rs.getDouble(5));
