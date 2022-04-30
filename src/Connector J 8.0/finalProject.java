@@ -637,12 +637,11 @@ class finalProject {
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 rs = stmt.executeQuery("Select class_id from class where isActive = true");
-                System.out.println("HERE");
+                //System.out.println("HERE");
 
                 if(rs != null){ //there exists a class
                     rs.first();
                     int temp = rs.getInt(1);
-                    //System.out.println(rs.getInt(1));
                     System.out.println("current Class id is:" + temp);
                 }
 
@@ -651,7 +650,12 @@ class finalProject {
                 hasResults = ps.execute();
 
                 if(hasResults){
-                    System.out.println("Student Exists.");
+                    System.out.println("Student Exists. Adding to class now...");
+                    ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?");
+                    ps.setInt(1, temp);
+                    ps.setString(2, username);
+                    ps.execute();
+                    System.out.println("Added to class");
                 }else{
                     System.out.println("Student Does NOT Exists.");
                 }
