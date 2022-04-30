@@ -817,28 +817,6 @@ class finalProject {
 
             }
 
-            /*
-            String temp = "SELECT * FROM class" +
-                    " JOIN students on students.class_id = class.class_id" +
-                    " WHERE class_courseNum = " + rs.getString(1);
-
-            if(rs.getString(3) != null){
-                temp += "AND class_term = " + rs.getString(3);
-                if(rs.getString(2)  != null){ //if sectionNUM exists
-                    temp += "and class_sectionNum = " + rs.getString(2);
-                }
-            }
-
-            temp += ";";
-            rs = stmt.executeQuery(temp);
-
-            boolean hasNext = true;
-            rs.first();
-            while(hasNext){
-                System.out.println("Class: " + rs.getString(1) + ", Section: " + rs.getInt(2) + ", Term: " + rs.getString(3));
-                hasNext = rs.next();
-            }
-            */
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
@@ -871,6 +849,21 @@ class finalProject {
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             name = name.toLowerCase();
+
+            ps = conn.prepareStatement("SELECT students_id, students_firstName, students_lastName, students_username, students_IDnum FROM students WHERE students_firstName LIKE '%?%' OR students_lastName LIKE '%?%' OR students_username LIKE '%?%';");
+            ps.setString(1, name);
+            ps.setString(2, name);
+            ps.setString(3, name);
+            ps.execute();
+
+            rs = ps.getResultSet();
+
+            System.out.println("StudentID, FirstName, LastName, Username, StudentIDnum");
+            while (rs.next()) {
+                System.out.println(rs.getInt(1) + " , " + rs.getString(2) + " , " + rs.getString(3) + " , " + rs.getString(4) + ", " + rs.getDouble(5));
+            }
+
+            /*
             String temp = "SELECT * FROM class" +
                     " JOIN students on students.class_id = class.class_id" +
                     " WHERE students.students_name LIKE '%" + name + "%' OR students.students_username LIKE '%" + name + "%';";
@@ -886,7 +879,7 @@ class finalProject {
                 hasNext = rs.next();
             }
 
-
+            */
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
