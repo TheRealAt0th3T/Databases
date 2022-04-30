@@ -305,6 +305,7 @@ class finalProject {
                             currSection = Integer.toString(rs.getInt(4));
                             currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
+                            System.out.println(recent);
                         } else if (recent != null && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2,rs.getString(2).length()))) {
                             currClassID = rs.getInt(1);
                             currClass = rs.getString(2);
