@@ -636,6 +636,13 @@ class finalProject {
 
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                rs = stmt.executeQuery("Select class_id from class where isActive = true");
+
+                boolean rowsLeft = true;
+
+                rs.first();
+                String temp = rs.getInt(1);
+                System.out.println("current Class id is:" + temp);
 
                 ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?");
                 ps.setString(1, username);
@@ -646,6 +653,8 @@ class finalProject {
                 }else{
                     System.out.println("Student Does NOT Exists.");
                 }
+
+
 
         } catch (SQLException ex) {
             // handle any errors
