@@ -750,14 +750,16 @@ class finalProject {
 
         Statement stmt = null;
         ResultSet rs = null;
+        PreparedStatement ps = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-
+            //stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             String getActive = "SELECT class_courseNum, class_sectionNum, class_term FROM class WHERE isActive = true";
-            rs = stmt.executeQuery(getActive);
-
-            if(rs != null){
+            ps = conn.prepareStatement(getActive);
+            //rs = stmt.executeQuery(getActive);
+            boolean hasResults = ps.execute();
+            
+            if(hasResults){
                 System.out.println("NOT EMPTY");
             }
 
