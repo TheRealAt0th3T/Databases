@@ -255,7 +255,7 @@ class finalProject {
     public static void activateClass(Connection conn, String courseNum, String term, String sectionNum) {
         PreparedStatement stmt = null;
         PreparedStatement setActive = null;
-        Statement setNotActive = null;
+        PreparedStatement setNotActive = null;
         ResultSet rs = null;
         String cond = "";
         boolean hasResult = false;
@@ -275,8 +275,8 @@ class finalProject {
                 whichCond = 1;
             }
             stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            setNotActive = conn.createStatement();
-            setNotActive.executeQuery("Update class set isActive = false where isActive = true OR isActive IS NULL;");
+            setNotActive = conn.prepareStatement("Update class set isActive = false where isActive = true OR isActive IS NULL;");
+            setNotActive.execute();
             
             switch(whichCond) {
                 case 1:
