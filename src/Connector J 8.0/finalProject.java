@@ -640,7 +640,7 @@ class finalProject {
                 System.out.println("HERE");
 
                 if(rs != null){ //there exists a class
-                    //rs.first();
+                    rs.first();
                     int temp = rs.getInt(1);
                     //System.out.println(rs.getInt(1));
                     System.out.println("current Class id is:" + temp);
