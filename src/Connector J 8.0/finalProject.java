@@ -653,7 +653,9 @@ class finalProject {
 
                 if (hasResults) {
                     student = ps.getResultSet();
-                    student.first();
+                    if (student == null) {
+                        System.out.println("im in here");
+                    }
                 }
                 
 
