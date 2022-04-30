@@ -650,17 +650,17 @@ class finalProject {
             checkStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rsTwo = checkStmt.executeQuery("SELECT * FROM students WHERE students_IDnum = " + studentid);
 
-            if(rs != null){ //student exists
+            if(rsTwo != null && hasResult){ //student exists
                 rsTwo = checkStmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
 
-                if(rsTwo.getString(1) != first){ //checking if first name is consistent
+                if(rsTwo != null && rsTwo.getString(1) != first){ //checking if first name is consistent
                     stmt = conn.prepareStatement("UPDATE students SET students_firstName = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     stmt.setString(1, first);
                     System.out.println("WARNING: " + username + "'s first name is being updated.");
                     stmt.execute();
                 }
 
-                if(rsTwo.getString(2) != last){
+                if(rsTwo != null && rsTwo.getString(2) != last){
                     stmt = conn.prepareStatement("UPDATE students SET students_lastName = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     stmt.setString(1, last);
                     System.out.println("WARNING: " + username + "'s last name is being updated.");
