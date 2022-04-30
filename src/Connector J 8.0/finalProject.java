@@ -482,18 +482,18 @@ class finalProject {
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            ps = conn.prepareStatement("insert into categories (categories_name) values (?);");
+            ps = conn.prepareStatement("insert into categories (categories_name) values (?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps.setString(1, name);
             ps.execute();
 
-            ps = conn.prepareStatement("SELECT categories_id FROM categories WHERE categories_name = ? ;");
+            ps = conn.prepareStatement("SELECT categories_id FROM categories WHERE categories_name = ? ;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps.setString(1, name);
             hasResult = ps.execute();
 
             if (hasResult) {
                 rs = ps.getResultSet();
                 rs.first();
-                ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
+                ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 ps.setInt(1, Integer.parseInt(weight));
                 ps.setInt(2, rs.getInt(1));
                 ps.execute();
