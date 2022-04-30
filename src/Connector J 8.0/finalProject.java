@@ -657,7 +657,7 @@ class finalProject {
                 ln = rs.getString(2);
                 if(fn != first || ln != last){
                     System.out.println("Warning: Student name has differences, updating now...");
-                    ps = conn.prepareStatement("UPDATE students SET students_firstName = " + fn +", students_lastName = " + ln + " WHERE username = " + username);
+                    ps = conn.prepareStatement("UPDATE students SET students_firstName = " + fn +", students_lastName = " + ln + " WHERE students_username = " + username);
                     ps.execute();
                     System.out.println("Warning: Student name is updated.");
                 }
