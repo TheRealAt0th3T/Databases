@@ -68,10 +68,10 @@ class finalProject {
                     }
                     break;
                 case "show-students":
-                    if(args.length > 2){
+                    if(args.length < 2){
                         System.out.println("Showing all students...");
                         showAllStudents(conn);
-                    }else if (args.length < 2){
+                    }else if (args.length > 2){
                         System.out.println("Showing specific student...");
                         showStudents(conn, args[1]);
                     }
