@@ -6,6 +6,11 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 class finalProject {
+    private int currClassID;
+    private String currClass;
+    private String currTerm;
+    private String currSection;
+
     public static void main(String[] args) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -370,13 +375,48 @@ class finalProject {
         }
     }
 
-    public static void addStudent(Connection conn) {
-        Statement stmt = null;
+    /**
+     * adding student to db and enrolling them in currClass, if they exist already just enroll them into class
+     * and update stored name if not same and print a warning for name change
+     *
+     * @param conn
+     */
+    public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
+        PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM students WHERE students_IDnum =" + studentid);
+
+            if(rs != null){ //student exists
+                rs = stmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
+
+                if(rs.getString(1) != first){ //checking if first name is consistent
+                    stmt = conn.prepareStatement("UPDATE students SET students_firstName = " + first);
+                    System.out.println("WARNING: " + username + "'s first name is being updated.");
+                    stmt.execute();
+                }
+
+                if(rs.getString(2) != last){
+                    stmt = conn.prepareStatement("UPDATE students SET students_lastName = " + last);
+                    System.out.println("WARNING: " + username + "'s last name is being updated.");
+                    stmt.execute();
+                }
+                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currClass + "WHERE students_IDnum =" + studentid);
+                stmt.execute();
+
+            }else{ //student doesn't exist
+                stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id)" +
+                        "values (?, ?, ?, ?, ?); ");
+                stmt.setString(1, first);
+                stmt.setString(2, last);
+                stmt.setString(3, username);
+                stmt.setInt(4, Integer.parseInt(studentid));
+                stmt.setString(5, currClassID);
+                stmt.execute();
+            }
+
 
         } catch (SQLException ex) {
             // handle any errors
@@ -403,13 +443,23 @@ class finalProject {
         }
     }
 
-    public static void editStudent(Connection conn) {
-        Statement stmt = null;
+    /**
+     * adding existing student to current class, if not existing then fails
+     * @param conn
+     */
+    public static void editStudent(Connection conn, String username) {
+        PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            rs = stmt.executeQuery("SELECT * FROM students WHERE students_username =" + username);
+
+            if(rs != null){ //therefore student exists
+                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currClass + "WHERE username =" + username);
+                stmt.execute();
+            }else{
+                System.out.println("ERROR: This user does not exist.");
+            }
 
         } catch (SQLException ex) {
             // handle any errors
@@ -436,13 +486,71 @@ class finalProject {
         }
     }
 
+    /**
+     * showing ALL students in currClass
+     * @param conn
+     */
     public static void showStudents(Connection conn) {
-        Statement stmt = null;
-        ResultSet rs = null;
+
+        PreparedStatement stmt = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            String temp = "SELECT * FROM class" +
+                    "JOIN students on students.class_id = class.class_id" +
+                    "WHERE class_courseNum = " + currClass;
+            if(currTerm != null){
+                temp += "AND class_term = " + currTerm;
+                if(currSection != null){ //if sectionNUM exists
+                    temp += "and class_sectionNum = " + currSection);
+                }
+            }
+
+            temp += ";";
+
+            stmt.conn.prepareStatement(temp);
+            stmt.execute();
+
+        } catch (SQLException ex) {
+            // handle any errors
+            System.err.println("SQLException: " + ex.getMessage());
+            System.err.println("SQLState: " + ex.getSQLState());
+            System.err.println("VendorError: " + ex.getErrorCode());
+        } finally {
+            // it is a good idea to release resources in a finally{} block
+            // in reverse-order of their creation if they are no-longer needed
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                rs = null;
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt = null;
+            }
+        }
+    }
+
+    /**
+     * showing specific students via their name/username, regardless if in currClass
+     * @param conn
+     */
+    public static void showStudents(Connection conn, String name) {
+
+        PreparedStatement stmt = null;
+
+        try {
+            name = name.toLowerCase();
+            String temp = "SELECT * FROM class" +
+                    "JOIN students on students.class_id = class.class_id" +
+                    "WHERE students.students_name LIKE '%" + name + "%' OR students.students_username LIKE '%" + name + "%';";
+
+            stmt.conn.prepareStatement(temp);
+            stmt.execute();
 
         } catch (SQLException ex) {
             // handle any errors
@@ -536,12 +644,10 @@ class finalProject {
     }
 
     public static void gradebook(Connection conn) {
-        Statement stmt = null;
-        ResultSet rs = null;
+        PreparedStatement stmt = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            stmt = conn.prepareStatement("");
 
         } catch (SQLException ex) {
             // handle any errors
