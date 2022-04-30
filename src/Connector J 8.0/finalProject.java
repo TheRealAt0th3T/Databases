@@ -798,7 +798,7 @@ class finalProject {
                 System.out.println("HERE");
                 rs = ps.getResultSet();
                 System.out.println("HERE");
-                rs.first();
+                //rs.first();
                 System.out.println("HERE");
                 num = rs.getString(1);
                 String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
