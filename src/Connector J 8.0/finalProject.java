@@ -655,11 +655,11 @@ class finalProject {
 
                 if (hasResult) {
                     student = ps.getResultSet();
-                    student.first();
+                    student.beforeFirst();
                 }
                 
                 
-                if(hasResult && student != null){ //------------------------------------------------------------------------------------------
+                if(hasResult && student.next()){ //------------------------------------------------------------------------------------------
                     System.out.println("Student Exists. Adding to class now...");
                     ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?");
                     ps.setInt(1, temp);
