@@ -1061,7 +1061,7 @@ class finalProject {
      *
      * @param conn
      */
-    public void gradebook(Connection conn) {
+    public static void gradebook(Connection conn) {
         PreparedStatement stmt = null;
         Statement s = null;
         ResultSet rs = null;
