@@ -3,6 +3,7 @@ USE finalProject;
 #DROP DATABASE finalProject;
 
 
+
 CREATE TABLE class(
 	class_id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	class_courseNum VARCHAR(10) NOT NULL,

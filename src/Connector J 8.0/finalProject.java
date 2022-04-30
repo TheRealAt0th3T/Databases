@@ -430,12 +430,19 @@ class finalProject {
      * @param conn
      */
     public static void showCategories(Connection conn) {
-        PreparedStatement ps = null;
-
+        Statement stmt = null;
+        ResultSet rs = null;
         try {
-            ps = conn.prepareStatement("SELECT categories_name, hasWeight_weight FROM categories" +
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = stmt.executeQuery("SELECT categories_name, hasWeight_weight FROM categories" +
                     " JOIN hasWeight ON categories.categories_id = hasWeight.categories_id;");
-            ps.execute();
+
+            boolean hasNext = true;
+            rs.first();
+            while(hasNext){
+                System.out.println("Category: " + rs.getString(1) + ", Weight: " + rs.getInt(2));
+                hasNext = rs.next();
+            }
 
         } catch (SQLException ex) {
             // handle any errors
@@ -479,6 +486,8 @@ class finalProject {
             ps.setInt(2, rs.getInt(1));
             ps.execute();
 
+            System.out.println("Category was added.");
+
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
@@ -509,11 +518,13 @@ class finalProject {
      * @param conn
      */
     public static void showAssignment(Connection conn) {
-        PreparedStatement stmt = null;
+        Statement stmt = null;
         ResultSet rs = null;
         try {
             stmt = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments" +
                     " ORDER BY categories_id;");
+
+
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());

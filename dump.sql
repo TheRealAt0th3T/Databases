@@ -72,13 +72,13 @@ insert into assignments (assignments_name, assignments_description, assignments_
 #
 # assignedHW
 #
-insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (51, 1, 1);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (1, 1, 1);
 insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (19, 2, 2);
-insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (87, 3, 3);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (27, 3, 3);
 insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (29, 4, 4);
-insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (51, 5, 4);
-insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (69, 6, 3);
-insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (62, 7, 3);
-insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (90, 8, 2);
-insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (31, 9, 1);
-insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (87, 10, 1);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (48, 5, 4);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (27, 6, 3);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (12, 7, 3);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (61, 8, 2);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (1, 9, 1);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (0, 10, 1);
