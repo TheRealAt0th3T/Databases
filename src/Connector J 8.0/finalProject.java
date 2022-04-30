@@ -631,9 +631,11 @@ class finalProject {
     public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
         Statement stmt = null;
         PreparedStatement ps = null;
+        PreparedStatement stmtTwo = null;
         ResultSet rs = null;
         String fn = "";
         String ln = "";
+        int temp = -1;
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -641,7 +643,7 @@ class finalProject {
 
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
             ps = conn.prepareStatement(getActive);
-            hasResult = ps.execute();
+            boolean hasResult = ps.execute();
 
             if (hasResult) {
                 rs = ps.getResultSet();
@@ -661,18 +663,18 @@ class finalProject {
                 }
                 ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?;");
                 ps.setInt(1, temp);
-                ps.setInt(2, username);
+                ps.setString(2, username);
                 ps.execute();
                 System.out.println("Student was added.");
             }else{
-                stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
+                stmtTwo = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
                         "values (?, ?, ?, ?, ?); ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                stmt.setString(1, first);
-                stmt.setString(2, last);
-                stmt.setString(3, username);
-                stmt.setInt(4, Integer.parseInt(studentid));
-                stmt.setInt(5, temp);
-                stmt.execute();
+                stmtTwo.setString(1, first);
+                stmtTwo.setString(2, last);
+                stmtTwo.setString(3, username);
+                stmtTwo.setInt(4, Integer.parseInt(studentid));
+                stmtTwo.setInt(5, temp);
+                stmtTwo.execute();
                 System.out.println("Student was created and added.");
             }
 
@@ -690,13 +692,6 @@ class finalProject {
                 } catch (SQLException sqlEx) {
                 } // ignore
                 rs = null;
-            }
-            if (rsTwo != null) {
-                try {
-                    rsTwo.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rsTwo = null;
             }
             if (stmt != null) {
                 try {
