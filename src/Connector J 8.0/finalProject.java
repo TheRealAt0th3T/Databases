@@ -36,8 +36,16 @@ class finalProject {
                     break;
                 case "select-class":
                     System.out.println("Selecting class...");
-                    activateClass(conn, args[1], args[2], args[3]);
-                    System.out.println("Class has been selected!");
+                    if (args.length == 2) {
+                        activateClass(conn, args[1], null, null);
+                        System.out.println("Class has been selected!");
+                    } else if (args.length == 3) {
+                        activateClass(conn, args[1], args[2], null);
+                        System.out.println("Class has been selected!");
+                    } else if (args.length == 4) {
+                        activateClass(conn, args[1], args[2], args[3]);
+                        System.out.println("Class has been selected!");
+                    }
                     break;
                 case "show-class":
                     break;
