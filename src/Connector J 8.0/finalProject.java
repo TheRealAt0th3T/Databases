@@ -799,8 +799,8 @@ class finalProject {
                 System.out.println("HERE");
                 rs = ps.getResultSet();
                 System.out.println("HERE");
-                rs.beforeFirst();
-                System.out.println("HERE");
+                //rs.beforeFirst();
+                //System.out.println("HERE");
                 rs.next();
                 System.out.println("HERE");
                 num = rs.getString(1);
