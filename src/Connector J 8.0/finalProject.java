@@ -988,7 +988,7 @@ class finalProject {
         boolean hasResult = false;
 
         try {
-            stmt = conn.prepareStatement("SELECT c.categories_name, a.assignments_name, SUM(hw.assignedHW_grade), a.assignments_pointValue" +
+            stmt = conn.prepareStatement("SELECT c.categories_name, a.assignments_name, SUM((hw.assignedHW_grade * w.hasWeight_weight) / 100), a.assignments_pointValue" +
             " FROM categories c " +
             " JOIN assignments a ON a.categories_id = c.categories_id " +
             " JOIN assignedHW hw ON hw.assignments_id = a.assignments_id " +
@@ -1002,8 +1002,9 @@ class finalProject {
                 rs = stmt.getResultSet();
                 rs.beforeFirst();
 
+                System.out.println("[FORMAT]");
                 System.out.println("Category | Assignment | Attempted | Max Possible Points");
-                System.out.println("----------------------------------------------------------");
+                System.out.println("----------------------------------------------------------\n");
 
                 while (rs.next()) {
                     System.out.println(
