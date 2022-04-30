@@ -636,7 +636,8 @@ class finalProject {
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-                ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = " + username);
+                ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?");
+                ps.setString(1, username);
                 rs = ps.execute();
 
                 if(rs != null){
