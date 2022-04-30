@@ -85,6 +85,8 @@ class finalProject {
                     showStudentsGrades(conn, args[1]);
                     break;
                 case "gradebook":
+                    System.out.println("Showing grade book for current class...");
+                    gradebook(conn);
                     break;
             }
 
@@ -1067,13 +1069,13 @@ class finalProject {
         int temp = -1;
         try {
             stmt = conn.prepareStatement("SELECT students_username,students_IDnum, students_firstName, students_LastName, SUM((assignedHW_grade * hasWeight_weight)/100) FROM class" +
-                    "JOIN categories ON categories.class_id = class.class_id" +
-                    "JOIN hasWeight ON hasWeight.categories_id = categories.categories_id" +
-                    "JOIN assignments ON assignments.categories_id = categories.categories_id" +
-                    "JOIN assignedHW ON assignments.assignments_id = assignedHW.assignments_id" +
-                    "JOIN students ON students.students_id = assignedHW.students_id" +
-                    "WHERE class.class_id = ?" +
-                    "GROUP BY students_username, students_IDnum, students_firstName, students_LastName;",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    " JOIN categories ON categories.class_id = class.class_id" +
+                    " JOIN hasWeight ON hasWeight.categories_id = categories.categories_id" +
+                    " JOIN assignments ON assignments.categories_id = categories.categories_id" +
+                    " JOIN assignedHW ON assignments.assignments_id = assignedHW.assignments_id" +
+                    " JOIN students ON students.students_id = assignedHW.students_id" +
+                    " WHERE class.class_id = ?" +
+                    " GROUP BY students_username, students_IDnum, students_firstName, students_LastName;",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
             s = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
