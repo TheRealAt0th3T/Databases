@@ -19,8 +19,6 @@ class finalProject {
             switch(args[0]) {
                 case "new-class":
                     System.out.println("Creating new class...");
-                    System.out.println("\n\n[Result Format]\n\n");
-                    System.out.println("ID:Course Number:Term:Section:Description\n\n");
                     createClass(conn, args[1], args[2], args[3], args[4]);
                     break;
                 case "list-classes":
