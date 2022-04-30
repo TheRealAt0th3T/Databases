@@ -582,8 +582,11 @@ class finalProject {
             stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt.setString(1, cat);
             stmt.execute();
+            System.out.println("HERE");
             rs = stmt.getResultSet();
             rs.first();
+            System.out.println("HERE");
+
             if(rs != null){
                 stmtTwo = conn.prepareStatement("insert into assignments" +
                     " (assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
