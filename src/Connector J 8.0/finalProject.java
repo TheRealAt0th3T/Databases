@@ -911,7 +911,7 @@ class finalProject {
                     ps.setInt(1, rs.getInt(2));
                     ps.setString(2, username);
                     ps.setString(3, assignmentName);
-                    ps.execute;
+                    ps.execute();
                 }else{
                     System.out.println("Updating...");
                     ps = conn.prepareStatement("UPDATE students" +
@@ -922,7 +922,7 @@ class finalProject {
                     ps.setInt(1, Integer.parseInt(grade));
                     ps.setString(2, username);
                     ps.setString(3, assignmentName);
-                    ps.execute;
+                    ps.execute();
                 }
                 System.out.println("Grade is updated.");
             }
