@@ -849,7 +849,7 @@ class finalProject {
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             name = name.toLowerCase();
-            System.out.println("HERE");
+            
             rs = stmt.executeQuery("SELECT students_id, students_firstName, students_lastName, students_username, students_IDnum FROM students WHERE students_firstName LIKE '%" +
                     name + "%' OR students_lastName LIKE '%" + name + "%' OR students_username LIKE '%" + name + "%';");
 
