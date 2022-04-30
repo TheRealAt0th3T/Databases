@@ -766,13 +766,13 @@ class finalProject {
             ps = conn.prepareStatement(getActive);
             //rs = stmt.executeQuery(getActive);
             boolean hasResults = ps.execute();
-            
+
             if(hasResults){
-                rs = ps.getResultSet();
-                int classID = rs.getInt(1);
-                String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
-                        " WHERE class_courseNum = " + classID + ";";
-                System.out.println(temp);
+                //rs = ps.getResultSet();
+                //int classID = rs.getInt(1);
+               // String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
+                      //  " WHERE class_courseNum = " + classID + ";";
+                System.out.println("HERE");
             }
 
             /*
