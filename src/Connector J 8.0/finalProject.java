@@ -629,48 +629,42 @@ class finalProject {
      * @param conn
      */
     public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
-        PreparedStatement stmt = null;
-        Statement checkStmt = null;
+        Statement stmt = null;
+        PreparedStatement ps = null;
         ResultSet rs = null;
-        ResultSet rsTwo = null;
-        boolean hasResult = false;
-        int temp = -1;
+        String fn = "";
+        String ln = "";
 
         try {
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = stmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE student_username = " + username);
+
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
-            stmt = conn.prepareStatement(getActive, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            hasResult = stmt.execute();
+            ps = conn.prepareStatement(getActive);
+            hasResult = ps.execute();
 
             if (hasResult) {
-                rs = stmt.getResultSet();
+                rs = ps.getResultSet();
                 rs.first();
                 temp = rs.getInt(1);
             }
 
-            checkStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rsTwo = checkStmt.executeQuery("SELECT * FROM students WHERE students_IDnum = " + studentid);
-
-            if(rsTwo != null && hasResult){ //student exists
-                rsTwo = checkStmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
-
-                if(rsTwo != null && rsTwo.getString(1) != first){ //checking if first name is consistent
-                    stmt = conn.prepareStatement("UPDATE students SET students_firstName = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                    stmt.setString(1, first);
-                    System.out.println("WARNING: " + username + "'s first name is being updated.");
-                    stmt.execute();
+            if(rs != null){
+                System.out.println("Warning: Student exists.");
+                fn =rs.getString(1);
+                ln = rs.getString(2);
+                if(fn != first || ln != last){
+                    System.out.println("Warning: Student name has differences, updating now...");
+                    ps = conn.prepareStatement("UPDATE students SET students_firstName = " + fn +", students_lastName = " + ln + " WHERE username = " + username);
+                    ps.execute();
+                    System.out.println("Warning: Student name is updated.");
                 }
-
-                if(rsTwo != null && rsTwo.getString(2) != last){
-                    stmt = conn.prepareStatement("UPDATE students SET students_lastName = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                    stmt.setString(1, last);
-                    System.out.println("WARNING: " + username + "'s last name is being updated.");
-                    stmt.execute();
-                }
-                stmt = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_IDnum = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                stmt.setInt(1, temp);
-                stmt.setInt(2, Integer.parseInt(studentid));
-                stmt.execute();
-            }else{ //student doesn't exist
+                ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?;");
+                ps.setInt(1, temp);
+                ps.setInt(2, username);
+                ps.execute();
+                System.out.println("Student was added.");
+            }else{
                 stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
                         "values (?, ?, ?, ?, ?); ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 stmt.setString(1, first);
@@ -679,9 +673,8 @@ class finalProject {
                 stmt.setInt(4, Integer.parseInt(studentid));
                 stmt.setInt(5, temp);
                 stmt.execute();
-                System.out.println("Student was added.");
+                System.out.println("Student was created and added.");
             }
-
 
         } catch (SQLException ex) {
             // handle any errors
