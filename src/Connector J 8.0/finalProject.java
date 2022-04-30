@@ -47,12 +47,20 @@ class finalProject {
                 case "show-class":
                     break;
                 case "show-categories":
+                    System.out.println("Showing all categories...");
+                    showCategories(conn);
                     break;
                 case "add-category":
+                    System.out.println("Adding new category...");
+                    addCategory(conn, args[1], args[2]);
                     break;
                 case "show-assignment":
+                    System.out.println("Showing assignments...");
+                    showAssignment(conn);
                     break;
                 case "add-assignment":
+                    System.out.println("Adding assignment...");
+                    addAssignment(conn, args[1], args[2], args[3], args[4]);
                     break;
                 case "add-student":
                     System.out.println("Adding student to current class...");
@@ -387,13 +395,17 @@ class finalProject {
         }
     }
 
+    /**
+     * list all categories and their weights
+     * @param conn
+     */
     public static void showCategories(Connection conn) {
-        Statement stmt = null;
-        ResultSet rs = null;
+        PreparedStatement ps = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            ps.prepareStatement("SELECT categories_name, hasWeight_weight FROM categories" +
+                    "JOIN hasWeight ON categories.categories_id = hasWeight.categories_id;");
+            ps.execute();
 
         } catch (SQLException ex) {
             // handle any errors
@@ -420,13 +432,27 @@ class finalProject {
         }
     }
 
-    public static void addCategory(Connection conn) {
+    /**
+     * Adding a new category, no reference to a class
+     * @param conn
+     */
+    public static void addCategory(Connection conn, String name, String weight) {
         Statement stmt = null;
         ResultSet rs = null;
+        PreparedStatement ps = null;
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+
+            ps = conn.prepareStatement("insert into categories (categories_name) values (" + name + ");");
+            ps.execute();
+
+            rs = stmt.executeQuery("SELECT categories_id FROM categories WHERE categories_name =" + name + ";");
+
+            ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
+            ps.setInt(1, weight);
+            ps.setInt(2, rs.getInt(1));
+            ps.execute();
 
         } catch (SQLException ex) {
             // handle any errors
@@ -453,14 +479,16 @@ class finalProject {
         }
     }
 
+    /**
+     * Showing list of assignments, their name, pointvalue, all in order by the category they belong to
+     * @param conn
+     */
     public static void showAssignment(Connection conn) {
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
-
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
-
+            stmt = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments\n" +
+                    "ORDER BY categories_id;")
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
@@ -486,13 +514,26 @@ class finalProject {
         }
     }
 
-    public static void addAssignment(Connection conn) {
-        Statement stmt = null;
+    public static void addAssignment(Connection conn, String name, String cat, String descrip, String points) {
+        PreparedStatement stmt = null;
         ResultSet rs = null;
+        Statement check = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            stmt = conn.preparedStatement("insert into assignments" +
+                    "(assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);");
+            stmt.setString(1, name);
+            stmt.setString(2, descrip);
+            stmt.setInt(3, Integer.parseInt(points));
+
+            check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = check.executeQuery("Select categories_id FROM categories WHERE categories_name =" + cat);
+            if(rs != null){
+                stmt.setString(4, rs.getInt(1));
+                stmt.execute();
+            }else{
+                System.out.println("ERROR: Category does not exist.");
+            }
 
         } catch (SQLException ex) {
             // handle any errors
