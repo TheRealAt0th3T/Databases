@@ -632,15 +632,16 @@ class finalProject {
         Statement stmt = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        boolean hasResults = false;
 
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
                 ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?");
                 ps.setString(1, username);
-                rs = ps.execute();
+                hasResults = ps.execute();
 
-                if(rs != null){
+                if(hasResults){
                     System.out.println("Student Exists.");
                 }else{
                     System.out.println("Student Does NOT Exists.");
