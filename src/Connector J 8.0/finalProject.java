@@ -476,10 +476,13 @@ class finalProject {
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            ps = conn.prepareStatement("insert into categories (categories_name) values (" + name + ");");
+            ps = conn.prepareStatement("insert into categories (categories_name) values (?);");
+            stmt.setString(1, name);
             ps.execute();
 
-            rs = stmt.executeQuery("SELECT categories_id FROM categories WHERE categories_name =" + name + ";");
+            ps = conn.prepareStatement("SELECT categories_id FROM categories WHERE categories_name = ? ;");
+            stmt.setString(1, name);
+            ps.execute();
 
             ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
             ps.setInt(1, Integer.parseInt(weight));
@@ -570,9 +573,12 @@ class finalProject {
             stmt.setString(1, name);
             stmt.setString(2, descrip);
             stmt.setInt(3, Integer.parseInt(points));
+            stmt.execute();
 
-            check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = check.executeQuery("Select categories_id FROM categories WHERE categories_name =" + cat);
+            //check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?");
+            stmt.setString(1, cat);
+            rs = stmt.getResultSet();
             if(rs != null){
                 stmt.setString(4, Integer.toString(rs.getInt(1)));
                 stmt.execute();
