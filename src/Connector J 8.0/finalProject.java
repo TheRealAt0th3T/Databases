@@ -981,12 +981,44 @@ class finalProject {
      * @param conn
      */
     public void showStudentsGrades(Connection conn, String username) {
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
+        boolean hasResult = false;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            stmt = conn.prepareStatement("SELECT c.categories_name as Category, a.assignments_name as Assignment, SUM(hw.assignedHW_grade) as Attempted, a.assignments_pointValue as TotalPoints" +
+            " FROM categories c " +
+            " JOIN assignments a ON a.categories_id = c.categories_id " +
+            " JOIN assignedHW hw ON hw.assignments_id = a.assignments_id " +
+            " JOIN students s ON s.students_id = hw.students_id " +
+            " WHERE s.students_username = ? " +
+            " GROUP by c.categories_name, a.assignments_name; ",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setString(1, username);
+            hasResult = stmt.execute();
+
+            if (hasResult) {
+                rs = stmt.getResultSet();
+                rs.beforeFirst();
+
+                System.out.println("Category | Assignment | Attempted | Max Possible Points");
+                System.out.println("----------------------------------------------------------");
+
+                while (rs.next()) {
+                    System.out.println(
+                        rs.getString(1) + "|" +
+                        rs.getString(2) + "|" +
+                        rs.getInt(3) + "|" +
+                        rs.getInt(4) + "|"
+                    );
+                }
+
+            } else {
+                System.out.println("No student was found with this username: " + username);
+            }
+
+
+
+
 
         } catch (SQLException ex) {
             // handle any errors
