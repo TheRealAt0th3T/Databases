@@ -633,6 +633,7 @@ class finalProject {
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean hasResults = false;
+        int temp = -1;
 
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -641,7 +642,7 @@ class finalProject {
 
                 if(rs != null){ //there exists a class
                     rs.first();
-                    int temp = rs.getInt(1);
+                    temp = rs.getInt(1);
                     System.out.println("current Class id is:" + temp);
                 }
 
@@ -659,8 +660,6 @@ class finalProject {
                 }else{
                     System.out.println("Student Does NOT Exists.");
                 }
-
-
 
         } catch (SQLException ex) {
             // handle any errors
