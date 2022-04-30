@@ -647,10 +647,16 @@ class finalProject {
                     System.out.println("current Class id is:" + temp);
                 }
 
+                stmt.close();
+
                 ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                stmt2 = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                String str = "SELECT students_firstName, students_lastName FROM students WHERE students_username = " + username + ";";
-                student = stmt2.executeQuery(str);
+                ps.setString(1, username);
+                boolean hasResult = ps.execute();
+
+                if (hasResult) {
+                    student = ps.getResultSet();
+                }
+                
                 
                 if(student != null){ //------------------------------------------------------------------------------------------
                     System.out.println("Student Exists. Adding to class now...");
