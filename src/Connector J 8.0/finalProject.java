@@ -632,39 +632,52 @@ class finalProject {
         PreparedStatement stmt = null;
         Statement checkStmt = null;
         ResultSet rs = null;
+        ResultSet rsTwo = null;
+        boolean hasResult = false;
+        int temp = -1;
 
         try {
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
-            rs = stmt.executeQuery(getActive);
-            int temp = rs.getInt(1);
+            stmt = conn.prepareStatement(getActive, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            hasResult = stmt.execute();
+
+            if (hasResult) {
+                rs = stmt.getResultSet();
+                rs.first();
+                temp = rs.getInt(1);
+            }
 
             checkStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = checkStmt.executeQuery("SELECT * FROM students WHERE students_IDnum = " + studentid);
+            rsTwo = checkStmt.executeQuery("SELECT * FROM students WHERE students_IDnum = " + studentid);
 
             if(rs != null){ //student exists
-                rs = checkStmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
+                rsTwo = checkStmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
 
-                if(rs.getString(1) != first){ //checking if first name is consistent
-                    stmt = conn.prepareStatement("UPDATE students SET students_firstName = " + first);
+                if(rsTwo.getString(1) != first){ //checking if first name is consistent
+                    stmt = conn.prepareStatement("UPDATE students SET students_firstName = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    stmt.setString(1, first);
                     System.out.println("WARNING: " + username + "'s first name is being updated.");
                     stmt.execute();
                 }
 
-                if(rs.getString(2) != last){
-                    stmt = conn.prepareStatement("UPDATE students SET students_lastName = " + last);
+                if(rsTwo.getString(2) != last){
+                    stmt = conn.prepareStatement("UPDATE students SET students_lastName = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    stmt.setString(1, last);
                     System.out.println("WARNING: " + username + "'s last name is being updated.");
                     stmt.execute();
                 }
-                stmt = conn.prepareStatement("UPDATE students SET class_id = " + temp + "WHERE students_IDnum =" + studentid);
+                stmt = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_IDnum = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                stmt.setInt(1, temp);
+                stmt.setInt(2, Integer.parseInt(studentid));
                 stmt.execute();
             }else{ //student doesn't exist
                 stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
-                        "values (?, ?, ?, ?, ?); ");
+                        "values (?, ?, ?, ?, ?); ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 stmt.setString(1, first);
                 stmt.setString(2, last);
                 stmt.setString(3, username);
                 stmt.setInt(4, Integer.parseInt(studentid));
-                stmt.setString(5, Integer.toString(temp));
+                stmt.setInt(5, temp);
                 stmt.execute();
                 System.out.println("Student was added.");
             }
@@ -684,6 +697,13 @@ class finalProject {
                 } catch (SQLException sqlEx) {
                 } // ignore
                 rs = null;
+            }
+            if (rsTwo != null) {
+                try {
+                    rsTwo.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                rsTwo = null;
             }
             if (stmt != null) {
                 try {
