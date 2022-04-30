@@ -642,7 +642,7 @@ class finalProject {
             rs = checkStmt.executeQuery("SELECT * FROM students WHERE students_IDnum = " + studentid);
 
             if(rs != null){ //student exists
-                rs = stmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
+                rs = checkStmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
 
                 if(rs.getString(1) != first){ //checking if first name is consistent
                     stmt = conn.prepareStatement("UPDATE students SET students_firstName = " + first);
