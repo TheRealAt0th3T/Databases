@@ -326,10 +326,12 @@ class finalProject {
                     if (canUpdate) {
                         setActive = conn.prepareStatement("UPDATE class set isActive = true where class_id = ?");
                         setActive.setBoolean(1, true);
+                        setActive.execute();
                     }
                 } else {
                     setActive = conn.prepareStatement("UPDATE class set isActive = true where class_id = ?");
-                    setActive.setBoolean(1, true);
+                    setActive.setInt(1, currClassId);
+                    setActive.execute();
                 }
             }
             System.out.println("Class has been selected");
@@ -723,7 +725,7 @@ class finalProject {
                     temp += "and class_sectionNum = " + rs.getString(2);
                 }
             }
-            
+
             temp += ";";
 
             stmt = conn.prepareStatement(temp);
