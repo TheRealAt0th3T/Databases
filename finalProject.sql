@@ -10,19 +10,34 @@ SELECT * FROM class
 JOIN students on students.class_id = class.class_id
 JOIN assignedHW on assignedHW.students_id = students.students_id;
 
+##gets students within a specific class
+SELECT students.students_username, students.students_IDnum, students.students_firstName, students.students_lastName FROM class
+JOIN students ON students.class_id = class.class_id
+WHERE class_courseNum = "CS410" and class_sectionNum = "2";
+
+##getting all columns for grades
+SELECT hasWeight_weight, assignedHW_grade, assignments.assignments_id, 
+students.students_username, students.students_IDnum, 
+students.students_firstName, students.students_lastName FROM class
+left JOIN categories ON categories.class_id = class.class_id
+left JOIN hasWeight ON hasWeight.categories_id = categories.categories_id
+left JOIN assignments ON assignments.categories_id = categories.categories_id
+left JOIN assignedHW ON assignedHW.assignments_id = assignments.assignments_id
+left JOIN students ON students.students_id = assignedHW.students_id
+WHERE class_courseNum = "CS410" AND class_sectionNum = "2";
+
 CREATE TABLE class(
 	class_id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	class_courseNum VARCHAR(10) NOT NULL,
 	class_term VARCHAR(20) NOT NULL,
 	class_sectionNum INTEGER NOT NULL,
-	class_description VARCHAR(100) NOT NULL,
-	class_professor VARCHAR(20) NOT NULL, 
-	class_title VARCHAR(50) NOT NULL
+	class_description VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE students (
 	students_id INTEGER PRIMARY KEY AUTO_INCREMENT,
-	students_name VARCHAR(50) NOT NULL,
+	students_firstName VARCHAR(50) NOT NULL,
+	students_lastName VARCHAR(50) NOT NULL,
 	students_username VARCHAR(50) NOT NULL,
 	students_IDnum BIGINT NOT NULL,
 	class_id INTEGER NOT NULL,
