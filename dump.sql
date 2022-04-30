@@ -68,6 +68,8 @@ insert into assignments (assignments_name, assignments_description, assignments_
 insert into assignments (assignments_name, assignments_description, assignments_pointValue, categories_id) values ('Test', 'vel fringilla', 61,1);
 insert into assignments (assignments_name, assignments_description, assignments_pointValue, categories_id) values ('Report', 'consequat fermentum', 27,7);
 insert into assignments (assignments_name, assignments_description, assignments_pointValue, categories_id) values ('TakeHome', 'dignissim aoidu', 48,10);
+insert into assignments (assignments_name, assignments_description, assignments_pointValue, categories_id) values ('testing', 'dignissim aoidu', 20,10);
+
 
 #
 # assignedHW
@@ -82,3 +84,5 @@ insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (1
 insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (61, 8, 2);
 insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (1, 9, 1);
 insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (0, 10, 1);
+insert into assignedHW (assignedHW_grade, students_id, assignments_id) values (4, 10, 4);
+
