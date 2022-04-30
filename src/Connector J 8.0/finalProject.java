@@ -259,17 +259,32 @@ class finalProject {
 
         try {
             if (sectionNum != null && term != null) {
-                cond = "class_courseNum = \"" + courseNum + "\" AND class_term = \"" + term + "\" AND class_sectionNum = \"" + sectionNum + "\"";
+                cond = "class_courseNum = ? AND class_term = ? AND class_sectionNum = ?;";
                 whichCond = 3;
             } else if (term != null) {
-                cond = "class_courseNum = \"" + courseNum + "\" AND class_term = \"" + term + "\"";
+                cond = "class_courseNum = ? AND class_term = ?;";
                 whichCond = 2;
             } else {
-                cond = "class_courseNum = \"" + courseNum + "\"";
+                cond = "class_courseNum = ?;";
                 whichCond = 1;
             }
             stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             
+            switch(whichCond) {
+                case 1:
+                    stmt.setString(1, courseNum);
+                    break;
+                case 2:
+                    stmt.setString(1, courseNum);
+                    stmt.setString(2, term);
+                    break;
+                case 3:
+                    stmt.setString(1, courseNum);
+                    stmt.setString(2, term);
+                    stmt.setString(3, sectionNum);
+                    break;
+            }
+
             hasResult = stmt.execute();
 
             if (hasResult) {
