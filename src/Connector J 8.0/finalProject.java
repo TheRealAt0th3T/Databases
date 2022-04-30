@@ -259,13 +259,13 @@ class finalProject {
 
         try {
             if (sectionNum != null && term != null) {
-                cond = "class_courseNum = " + courseNum + " AND class_term = " + term + " AND class_sectionNum = " + sectionNum;
+                cond = "class_courseNum = \"" + courseNum + "\" AND class_term = \"" + term + "\" AND class_sectionNum = \"" + sectionNum + "\"";
                 whichCond = 3;
             } else if (term != null) {
-                cond = "class_courseNum = " + courseNum + " AND class_term = " + term;
+                cond = "class_courseNum = \"" + courseNum + "\" AND class_term = \"" + term + "\"";
                 whichCond = 2;
             } else {
-                cond = "class_courseNum = " + courseNum;
+                cond = "class_courseNum = \"" + courseNum + "\"";
                 whichCond = 1;
             }
             stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond);
