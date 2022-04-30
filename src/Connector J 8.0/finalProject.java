@@ -649,7 +649,7 @@ class finalProject {
 
                 stmt.close();
 
-                ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                ps = conn.prepareStatement("SELECT * FROM students WHERE students_username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 ps.setString(1, username);
                 boolean hasResult = ps.execute();
 
