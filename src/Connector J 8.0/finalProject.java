@@ -659,6 +659,14 @@ class finalProject {
                     System.out.println("Added to class");
                 }else{
                     System.out.println("Student Does NOT Exists.");
+                    ps = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) values (?, ?, ?, ?, ?);");
+                    ps.setString(1, first);
+                    ps.setString(2, last);
+                    ps.setString(3, username);
+                    ps.setInt(4, Integer.parseInt(studentid));
+                    ps.setInt(5, temp);
+                    ps.execute();
+                    System.out.println("Student has been created and added to class.");
                 }
 
         } catch (SQLException ex) {
