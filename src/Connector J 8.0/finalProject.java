@@ -657,8 +657,6 @@ class finalProject {
                 }
                 stmt = conn.prepareStatement("UPDATE students SET class_id = " + temp + "WHERE students_IDnum =" + studentid);
                 stmt.execute();
-                System.out.println("Student was added.");
-
             }else{ //student doesn't exist
                 stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
                         "values (?, ?, ?, ?, ?); ");
@@ -668,6 +666,7 @@ class finalProject {
                 stmt.setInt(4, Integer.parseInt(studentid));
                 stmt.setString(5, Integer.toString(temp));
                 stmt.execute();
+                System.out.println("Student was added.");
             }
 
 
