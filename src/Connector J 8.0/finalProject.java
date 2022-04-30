@@ -274,7 +274,7 @@ class finalProject {
                 cond = "class_courseNum = ?;";
                 whichCond = 1;
             }
-            stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond, ResultSet.TYPE_SCROLL_INSENSITIVE);
+            stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             setNotActive = conn.prepareStatement("Update class set isActive = false where isActive = true OR isActive IS NULL;");
             setNotActive.execute();
             
@@ -330,6 +330,7 @@ class finalProject {
                         System.out.println("Class has been selected");
                     }
                 } else {
+                    rs.first();
                     currClassId = rs.getInt(1);
                     setActive = conn.prepareStatement("UPDATE class set isActive = true where class_id = ?");
                     setActive.setInt(1, currClassId);
