@@ -639,7 +639,7 @@ class finalProject {
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE student_username = " + username);
+            rs = stmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_username = " + username);
 
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
             ps = conn.prepareStatement(getActive);
