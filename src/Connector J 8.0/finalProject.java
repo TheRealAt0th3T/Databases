@@ -638,7 +638,7 @@ class finalProject {
 
         try {
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
-            stmt = conn.prepareStatement(getActive);
+            stmt = conn.prepareStatement(getActive, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             hasResult = stmt.execute();
 
             if (hasResult) {
@@ -654,19 +654,19 @@ class finalProject {
                 rsTwo = checkStmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
 
                 if(rsTwo.getString(1) != first){ //checking if first name is consistent
-                    stmt = conn.prepareStatement("UPDATE students SET students_firstName = ?;");
+                    stmt = conn.prepareStatement("UPDATE students SET students_firstName = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     stmt.setString(1, first);
                     System.out.println("WARNING: " + username + "'s first name is being updated.");
                     stmt.execute();
                 }
 
                 if(rsTwo.getString(2) != last){
-                    stmt = conn.prepareStatement("UPDATE students SET students_lastName = ?;");
+                    stmt = conn.prepareStatement("UPDATE students SET students_lastName = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     stmt.setString(1, last);
                     System.out.println("WARNING: " + username + "'s last name is being updated.");
                     stmt.execute();
                 }
-                stmt = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_IDnum = ?;");
+                stmt = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_IDnum = ?;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 stmt.setInt(1, temp);
                 stmt.setInt(2, Integer.parseInt(studentid));
                 stmt.execute();
@@ -674,7 +674,7 @@ class finalProject {
 
             }else{ //student doesn't exist
                 stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
-                        "values (?, ?, ?, ?, ?); ");
+                        "values (?, ?, ?, ?, ?); ", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 stmt.setString(1, first);
                 stmt.setString(2, last);
                 stmt.setString(3, username);
