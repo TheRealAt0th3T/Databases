@@ -482,11 +482,11 @@ class finalProject {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             ps = conn.prepareStatement("insert into categories (categories_name) values (?);");
-            stmt.setString(1, name);
+            ps.setString(1, name);
             ps.execute();
 
             ps = conn.prepareStatement("SELECT categories_id FROM categories WHERE categories_name = ? ;");
-            stmt.setString(1, name);
+            ps.setString(1, name);
             ps.execute();
 
             ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
