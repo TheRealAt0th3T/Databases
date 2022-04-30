@@ -50,10 +50,25 @@ class finalProject {
                 case "add-assignment":
                     break;
                 case "add-student":
+                    System.out.println("Adding student to current class...");
+                    if(args.length > 2){
+                        addStudent(conn, args[1], args[2], args[3], args[4]);
+                    }else {
+                        editStudent(conn, args[1]);
+                    }
                     break;
                 case "show-students":
+                    if(args.length > 1){
+                        System.out.println("Showing all students...");
+                        showAllStudents(conn);
+                    }else{
+                        System.out.println("Showing specific student...");
+                        showStudents(conn, args[1]);
+                    }
                     break;
                 case "grade":
+                    System.out.println("Updating grade...");
+                    gradeAssignment(conn, args[1], args[2], args[3]);
                     break;
                 case "student-grades":
                     break;
@@ -570,7 +585,7 @@ class finalProject {
      * showing ALL students in currClass
      * @param conn
      */
-    public static void showStudents(Connection conn) {
+    public static void showAllStudents(Connection conn) {
 
         PreparedStatement stmt = null;
 
@@ -633,13 +648,13 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            if (stmt != null) 
+            if (stmt != null)
             {
-                try 
+                try
                 {
                     stmt.close();
-                } 
-                catch (SQLException sqlEx) 
+                }
+                catch (SQLException sqlEx)
                 {
                 } // ignore
                 stmt = null;
@@ -647,7 +662,68 @@ class finalProject {
         }
     }
 
-    public static void gradeAssignment(Connection conn) {
+
+    /**
+     * assign assignment's grade for student, replace student's grade if exists, if new grade exceeds maxpoints, print warning and set to max
+     * @param conn
+     */
+    public static void gradeAssignment(Connection conn, String assignmentName, String username, String grade) {
+        Statement stmt = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+
+        try {
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = stmt.executeQuery("SELECT assignments_pointValue FROM assignments WHERE assignments_name =" + assignmentName";");
+
+            if(rs.getInt(1) > Integer.parseInt(grade)){
+                System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(1) + ").");
+            }else{
+                ps = conn.prepareStatement("UPDATE students" +
+                        "JOIN assignedHW on assignedHW.students_id = students.students_id" +
+                        "JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
+                        "SET assignedHW.assignedHW_grade = " + grade + "WHERE students.students_username =" + username +
+                        "AND assignments.assignments_name = " + assignmentName + ";");
+            }
+
+        } catch (SQLException ex) {
+            // handle any errors
+            System.err.println("SQLException: " + ex.getMessage());
+            System.err.println("SQLState: " + ex.getSQLState());
+            System.err.println("VendorError: " + ex.getErrorCode());
+        } finally {
+            // it is a good idea to release resources in a finally{} block
+            // in reverse-order of their creation if they are no-longer needed
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                rs = null;
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt = null;
+            }
+        }
+    }
+
+
+    /**
+     * show students current grade; all assignments grouped by category, with student's grade if they have one
+     * show subtotals for each category and overall grade
+     *
+     * scale category weights so that they sum to 100
+     *
+     * Need to show two versions:
+     *  one total grade based on total possible points (plus ones that dont have a grade yet)
+     *  attempted grade based on points they currently have
+     * @param conn
+     */
+    public static void showStudentsGrades(Connection conn, String username) {
         Statement stmt = null;
         ResultSet rs = null;
 
@@ -680,39 +756,17 @@ class finalProject {
         }
     }
 
-    public static void showStudentsGrades(Connection conn) {
-        Statement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
-
-        } catch (SQLException ex) {
-            // handle any errors
-            System.err.println("SQLException: " + ex.getMessage());
-            System.err.println("SQLState: " + ex.getSQLState());
-            System.err.println("VendorError: " + ex.getErrorCode());
-        } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                stmt = null;
-            }
-        }
-    }
-
+    /**
+     * Show current class's gradebook: students (username, ID, and name) and their total grades in the class
+     *
+     * scale category weights so that they sum to 100
+     *
+     * Need to show two versions:
+     *  one total grade based on total possible points (plus ones that dont have a grade yet)
+     *  attempted grade based on points they currently have
+     *
+     * @param conn
+     */
     public static void gradebook(Connection conn) {
         PreparedStatement stmt = null;
 
@@ -725,13 +779,13 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            if (stmt != null) 
+            if (stmt != null)
             {
-                try 
+                try
                 {
                     stmt.close();
-                } 
-                catch (SQLException sqlEx) 
+                }
+                catch (SQLException sqlEx)
                 {
                 } // ignore
                 stmt = null;
