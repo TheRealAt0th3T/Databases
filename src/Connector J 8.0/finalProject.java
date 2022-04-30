@@ -636,7 +636,7 @@ class finalProject {
 
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                rs = conn.executeQuery("Select class_id from class where isActive = true");
+                rs = stmt.executeQuery("Select class_id from class where isActive = true");
 
 
                 if(rs != null){
