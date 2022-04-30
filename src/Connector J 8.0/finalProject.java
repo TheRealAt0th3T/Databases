@@ -714,6 +714,7 @@ class finalProject {
 
         try {
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = stmt.executeQuery(getActive);
             int temp = rs.getInt(1);
 
