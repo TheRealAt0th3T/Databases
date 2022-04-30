@@ -641,7 +641,7 @@ class finalProject {
                 boolean rowsLeft = true;
 
                 rs.first();
-                String temp = rs.getInt(1);
+                int temp = rs.getInt(1);
                 System.out.println("current Class id is:" + temp);
 
                 ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?");
