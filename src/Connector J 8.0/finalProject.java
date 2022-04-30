@@ -306,6 +306,7 @@ class finalProject {
                             currSection = Integer.toString(rs.getInt(4));
                             currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
+                            fullTerm = rs.getString(3);
                         } else if (recent != null && fullTerm != rs.getString(3) && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
                             currClassID = rs.getInt(1);
                             currClass = rs.getString(2);
@@ -313,8 +314,9 @@ class finalProject {
                             currSection = Integer.toString(rs.getInt(4));
                             currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
+                            fullTerm = rs.getString(3);
                         } else {
-                            System.out.println("There are multiple sections for " + courseNum + " " + term);
+                            System.out.println("There are multiple sections for " + courseNum);
                         }
                         hasNext = rs.next();
                     }
