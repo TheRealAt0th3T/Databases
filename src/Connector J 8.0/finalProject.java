@@ -1083,7 +1083,7 @@ class finalProject {
                 temp = rs.getInt(1);
             }
 
-            stmt.setString(1, temp);
+            stmt.setInt(1, temp);
             hasResult = stmt.execute();
 
             if (hasResult) {
