@@ -804,8 +804,10 @@ class finalProject {
                 num = rs.getString(1);
                 //String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
                  //       " WHERE class_courseNum = " + num + ";";
-                ps = conn.prepareStatement("SELECT * FROM class JOIN students on students.class_id = class.class_id WHERE class_courseNum = ?;");
+                ps = conn.prepareStatement("SELECT * FROM class JOIN students on students.class_id = class.class_id WHERE class_courseNum = ? AND class_sectionNum = ? AND class_term = ?;");
                 ps.setString(1, num);
+                ps.setInt(2, rs.getInt(2));
+                ps.setInt(3, rs.getInt(3));
                 ps.execute();
                 System.out.println("HERE");
             }
