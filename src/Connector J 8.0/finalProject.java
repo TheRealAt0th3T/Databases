@@ -640,7 +640,8 @@ class finalProject {
 
 
                 if(rs != null){
-                    int temp = rs.first();
+                    rs.first();
+                    int temp = rs.getInt(1);
                     System.out.println("current Class id is:" + temp);
                 }
 
