@@ -578,13 +578,13 @@ class finalProject {
 
         try {
             stmt = conn.prepareStatement("insert into assignments" +
-                    "(assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);");
+                    "(assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt.setString(1, name);
             stmt.setString(2, cat);
             stmt.setString(3, descrip);
 
             //check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?");
+            stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt.setString(1, cat);
             stmt.execute();
             rs = stmt.getResultSet();
