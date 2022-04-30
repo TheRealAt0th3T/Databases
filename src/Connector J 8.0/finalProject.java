@@ -636,11 +636,12 @@ class finalProject {
 
         try {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                rs = stmt.executeQuery("Select class_id from class where isActive = true");
+                ps = conn.prepareStatement("Select class_id from class where isActive = true");
+                hasResults = ps.execute();
 
-                if(rs != null){
+                if(hasResults){
                     rs.first();
-                    int temp = rs.getInt(1);
+                    int temp = ps.getResultSet(1);
                     System.out.println("current Class id is:" + temp);
                 }
 
