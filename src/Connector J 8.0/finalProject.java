@@ -294,7 +294,7 @@ class finalProject {
                     System.out.println("There are multiple sections for " + courseNum + " " + term);
                 } else if (whichCond == 1 && rs.next()) {
                     rs.first();
-                    String recent = "";
+                    String recent = null;
                     boolean hasNext = true;
 
                     while (hasNext) {
@@ -306,7 +306,7 @@ class finalProject {
                             currDescription = rs.getString(5);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             System.out.println(recent);
-                        } else if (recent != null && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2,rs.getString(2).length()))) {
+                        } else if (recent != null && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
                             currClassID = rs.getInt(1);
                             currClass = rs.getString(2);
                             currTerm = rs.getString(3);
