@@ -145,7 +145,7 @@ class finalProject {
 
         try {
             stmt = conn.prepareStatement("Insert INTO class (class_courseNum," +
-            " class_term, class_sectionNum, class_description, class_professor, class_title)" +
+            " class_term, class_sectionNum, class_description)" +
             " VALUES(?, ?, ?, ?);");
             stmt.setString(1, num);
             stmt.setString(2, term);
