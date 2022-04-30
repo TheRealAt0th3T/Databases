@@ -268,7 +268,7 @@ class finalProject {
                 cond = "class_courseNum = \"" + courseNum + "\"";
                 whichCond = 1;
             }
-            stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond);
+            stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             
             hasResult = stmt.execute();
 
