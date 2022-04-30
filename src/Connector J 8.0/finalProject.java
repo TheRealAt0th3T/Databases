@@ -14,7 +14,10 @@ class finalProject {
 			System.out.println();
 
             Connection conn = makeConnection("53306", "finalProject","Minfilia1178");
-            runQuery(conn);
+            if (args[0].equals("new-class")) {
+                System.out.println("Creating new class...");
+                createClass(conn, args[1], args[2], args[3], args[4], args[5], args[6]);
+            }
 
             conn.close();
         } catch (Exception e) {
@@ -100,12 +103,21 @@ class finalProject {
     }
 
     public static void createClass(Connection conn, String num, String term, String sectionNum, String description, String professor, String title) {
-        Statement stmt = null;
-        ResultSet rs = null;
+        
+        PreparedStatement stmt = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            stmt = conn.prepareStatement("Insert INTO class (class_courseNum," +
+            " class_term, class_sectionNum, class_description, class_professor, class_title)" +
+            " VALUES(?, ?, ?, ?, ?, ?);");
+            stmt.setString(1, num);
+            stmt.setString(2, term);
+            stmt.setInt(3, Integer.parseInt(sectionNum));
+            stmt.setString(4, description);
+            stmt.setString(5, professor);
+            stmt.setString(6, title);
+            
+            stmt.execute();
 
         } catch (SQLException ex) {
             // handle any errors
@@ -113,19 +125,14 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
+            if (stmt != null) 
+            {
+                try 
+                {
                     stmt.close();
-                } catch (SQLException sqlEx) {
+                } 
+                catch (SQLException sqlEx) 
+                {
                 } // ignore
                 stmt = null;
             }
