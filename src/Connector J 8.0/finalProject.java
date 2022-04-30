@@ -650,7 +650,7 @@ class finalProject {
             checkStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rsTwo = checkStmt.executeQuery("SELECT * FROM students WHERE students_IDnum = " + studentid);
 
-            if(rs != null){ //student exists
+            if(rsTwo != null && hasResult){ //student exists
                 rsTwo = checkStmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
 
                 if(rsTwo != null && rsTwo.getString(1) != first){ //checking if first name is consistent
