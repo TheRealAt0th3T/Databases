@@ -717,14 +717,15 @@ class finalProject {
             rs = stmt.executeQuery(getActive);
             int temp = rs.getInt(1);
 
-            rs = stmt2.executeQuery("SELECT * FROM students WHERE students_username =" + username);
             stmt2 = conn.prepareStatement("SELECT * FROM students WHERE students_username = ?");
             stmt2.setString(1, username);
             boolean hasResult = stmt2.execute();
+            System.out.println("penis");
 
             if (hasResult) {
                 rs = stmt2.getResultSet();
                 rs.beforeFirst();
+                System.out.println("fuckme");
             }
 
             if(hasResult && rs.next()){ //therefore student exists
