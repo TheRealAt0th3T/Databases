@@ -7,8 +7,6 @@ import java.sql.PreparedStatement;
 
 class finalProject {
 
-    static CurrData currData;
-
     public static void main(String[] args) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -256,10 +254,14 @@ class finalProject {
 
     public static void activateClass(Connection conn, String courseNum, String term, String sectionNum) {
         PreparedStatement stmt = null;
+        PreparedStatement setActive = null;
+        Statement setNotActive = null;
         ResultSet rs = null;
         String cond = "";
         boolean hasResult = false;
         int whichCond = 0;
+        int currClassId = 0;
+        boolean canUpdate = true;
 
         try {
             if (sectionNum != null && term != null) {
@@ -273,6 +275,8 @@ class finalProject {
                 whichCond = 1;
             }
             stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            setNotActive = conn.createStatement();
+            setNotActive.executeQuery("Update class set isActive = false where isActive = true OR isActive IS NULL;");
             
             switch(whichCond) {
                 case 1:
@@ -304,26 +308,28 @@ class finalProject {
 
                     while (hasNext) {
                         if (recent == null) {
-                            currData = new CurrData(rs.getInt(1), rs.getString(2), rs.getString(3), Integer.toString(rs.getInt(4)), rs.getString(5));
+                            currClassId = rs.getInt(1);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
                             hasNext = rs.next();
-                            System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                         } else if (recent != null && fullTerm != rs.getString(3) && Integer.parseInt(recent) < Integer.parseInt(rs.getString(2).substring(2, rs.getString(2).length()))) {
-                            currData = new CurrData(rs.getInt(1), rs.getString(2), rs.getString(3), Integer.toString(rs.getInt(4)), rs.getString(5));
+                            currClassId = rs.getInt(1);
                             recent = rs.getString(2).substring(2, rs.getString(2).length());
                             fullTerm = rs.getString(3);
                             hasNext = rs.next();
-                            System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                         } else {
                             System.out.println("There are multiple sections for " + courseNum);
                             hasNext = false;
+                            canUpdate = false;
                         }
-                        
+                    }
+                    if (canUpdate) {
+                        setActive = conn.prepareStatement("UPDATE class set isActive = true where class_id = ?");
+                        setActive.setBoolean(1, true);
                     }
                 } else {
-                    currData = new CurrData(rs.getInt(1), rs.getString(2), rs.getString(3), Integer.toString(rs.getInt(4)), rs.getString(5));
-                    System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
+                    setActive = conn.prepareStatement("UPDATE class set isActive = true where class_id = ?");
+                    setActive.setBoolean(1, true);
                 }
             }
             System.out.println("Class has been selected");
@@ -349,11 +355,68 @@ class finalProject {
                 } // ignore
                 stmt = null;
             }
+            if (setActive != null) {
+                try {
+                    setActive.close();
+                } catch (SQLException sqlEx) {
+                    // ignore
+                }
+                setActive = null;
+            }
+            if (setNotActive != null) {
+                try {
+                    setNotActive.close();
+                } catch (SQLException sqlEx) {
+                    // ignore
+                }
+                setNotActive = null;
+            }
         }
     }
 
     public static void showActiveClass(Connection conn) {
-        System.out.println("Course ID: " + currData.getClassId() + "|Course Number: " + currData.getCurrClass() + "|Term: " + currData.getCurrTerm()+ "|Section: " + currData.getCurrSection() + "|Description: " + currData.getCurrDesc());
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = stmt.executeQuery("Select * from class where isActive = true");
+
+            boolean rowsLeft = true;
+
+            rs.first();
+            while (rowsLeft) {
+                System.out.println(rs.getInt(1) 
+                        + ":" + rs.getString(2) 
+                        + ":" + rs.getString(3) 
+                        + ":" + rs.getInt(4)
+                        + ":" + rs.getString(5));
+                        rowsLeft = rs.next();
+            }
+
+        } catch (SQLException ex) {
+            // handle any errors
+            System.err.println("SQLException: " + ex.getMessage());
+            System.err.println("SQLState: " + ex.getSQLState());
+            System.err.println("VendorError: " + ex.getErrorCode());
+        } finally {
+            // it is a good idea to release resources in a finally{} block
+            // in reverse-order of their creation if they are no-longer needed
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                rs = null;
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt = null;
+            }
+        }
     }
 
     /**
@@ -559,7 +622,7 @@ class finalProject {
                 stmt.setString(2, last);
                 stmt.setString(3, username);
                 stmt.setInt(4, Integer.parseInt(studentid));
-                stmt.setString(5, Integer.toString(temp);
+                stmt.setString(5, Integer.toString(temp));
                 stmt.execute();
             }
 
@@ -654,13 +717,13 @@ class finalProject {
                     "JOIN students on students.class_id = class.class_id" +
                     "WHERE class_courseNum = " + rs.getString(1);
 
-            if(currData.getCurrTerm() != null){
+            if(rs.getString(3) != null){
                 temp += "AND class_term = " + rs.getString(3);
-                if(currData.getCurrSection()  != null){ //if sectionNUM exists
+                if(rs.getString(2)  != null){ //if sectionNUM exists
                     temp += "and class_sectionNum = " + rs.getString(2);
                 }
             }
-
+            
             temp += ";";
 
             stmt = conn.prepareStatement(temp);
