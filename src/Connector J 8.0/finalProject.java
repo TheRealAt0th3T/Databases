@@ -274,7 +274,7 @@ class finalProject {
                 cond = "class_courseNum = ?;";
                 whichCond = 1;
             }
-            stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt = conn.prepareStatement("SELECT * FROM class WHERE " + cond, ResultSet.TYPE_SCROLL_INSENSITIVE);
             setNotActive = conn.prepareStatement("Update class set isActive = false where isActive = true OR isActive IS NULL;");
             setNotActive.execute();
             
