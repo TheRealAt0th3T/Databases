@@ -650,7 +650,7 @@ class finalProject {
                 ps.setString(1, username);
                 hasResults = ps.execute();
 
-                if(hasResults){
+                if(hasResults){ //------------------------------------------------------------------------------------------
                     System.out.println("Student Exists. Adding to class now...");
                     ps = conn.prepareStatement("UPDATE students SET class_id = ? WHERE students_username = ?");
                     ps.setInt(1, temp);
