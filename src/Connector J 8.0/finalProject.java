@@ -638,12 +638,11 @@ class finalProject {
                 stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 rs = stmt.executeQuery("Select class_id from class where isActive = true");
 
-
-                if(rs != null){
+                if(rs != null){ //there exists a class
                     //rs.first();
                     //int temp = rs.getInt(1);
-                    System.out.println(rs.getInt());
-                    System.out.println("current Class id is:" + temp);
+                    //System.out.println(rs.getInt(1));
+                    System.out.println("current Class id is:");
                 }
 
                 ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?");
