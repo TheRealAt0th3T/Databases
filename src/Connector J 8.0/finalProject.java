@@ -986,7 +986,7 @@ class finalProject {
         boolean hasResult = false;
 
         try {
-            stmt = conn.prepareStatement("SELECT c.categories_name as Category, a.assignments_name as Assignment, SUM(hw.assignedHW_grade) as Attempted, a.assignments_pointValue as TotalPoints" +
+            stmt = conn.prepareStatement("SELECT c.categories_name, a.assignments_name, SUM(hw.assignedHW_grade), a.assignments_pointValue" +
             " FROM categories c " +
             " JOIN assignments a ON a.categories_id = c.categories_id " +
             " JOIN assignedHW hw ON hw.assignments_id = a.assignments_id " +
