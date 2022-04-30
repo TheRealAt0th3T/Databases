@@ -1102,7 +1102,7 @@ class finalProject {
                                     rs.getInt(5) + "|"
                     );
                 }
-
+            }
             } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
