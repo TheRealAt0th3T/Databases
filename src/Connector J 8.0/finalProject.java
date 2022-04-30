@@ -586,6 +586,7 @@ class finalProject {
             //check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt = conn.prepareStatement("Select categories_id FROM categories WHERE categories_name = ?");
             stmt.setString(1, cat);
+            stmt.execute();
             rs = stmt.getResultSet();
             if(rs != null){
                 stmt.setString(4, Integer.toString(rs.getInt(1)));
