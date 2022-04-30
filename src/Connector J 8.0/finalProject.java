@@ -711,12 +711,17 @@ class finalProject {
         PreparedStatement stmt2 = null;
         PreparedStatement stmt3 = null;
         ResultSet rs = null;
+        int temp = 0;
 
         try {
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = stmt.executeQuery(getActive);
-            int temp = rs.getInt(1);
+            rs.beforeFirst();
+            if (rs.next()) {
+                temp = rs.getInt(1);
+            }
+            
 
             stmt2 = conn.prepareStatement("SELECT * FROM students WHERE students_username = ?");
             stmt2.setString(1, username);
