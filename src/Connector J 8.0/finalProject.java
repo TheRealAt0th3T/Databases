@@ -769,12 +769,12 @@ class finalProject {
             boolean hasResults = ps.execute();
 
             if(hasResults){
-                //rs = ps.getResultSet();
+                rs = ps.getResultSet();
                 //int classID = rs.getInt(1);
                 //rs.first();
-                //num = rs.getInt(1);
-                //String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
-                      //  " WHERE class_courseNum = " + num + ";";
+                num = rs.getInt(1);
+                String temp = "SELECT * FROM class JOIN students on students.class_id = class.class_id" +
+                        " WHERE class_courseNum = " + num + ";";
                 System.out.println("HERE");
             }
 
