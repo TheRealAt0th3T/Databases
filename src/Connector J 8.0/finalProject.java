@@ -579,7 +579,7 @@ class finalProject {
 
         try {
             stmtTwo = conn.prepareStatement("insert into assignments" +
-                    "(assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    " (assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmtTwo.setString(1, name);
             stmtTwo.setString(2, cat);
             stmtTwo.setString(3, descrip);
