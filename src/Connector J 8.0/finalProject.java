@@ -575,14 +575,14 @@ class finalProject {
     public static void addAssignment(Connection conn, String name, String cat, String descrip, String points) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Statement check = null;
 
         try {
             stmt = conn.prepareStatement("insert into assignments" +
                     "(assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);");
             stmt.setString(1, name);
-            stmt.setString(2, descrip);
-            stmt.setInt(3, Integer.parseInt(points));
+            stmt.setString(2, cat);
+            stmt.setString(3, descrip);
+            stmt.setInt(4, Integer.parseInt(points));
             stmt.execute();
 
             //check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
