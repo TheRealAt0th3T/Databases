@@ -45,6 +45,8 @@ class finalProject {
                     }
                     break;
                 case "show-class":
+                    System.out.println("Showing active class");
+                    showActiveClass(conn);
                     break;
                 case "show-categories":
                     System.out.println("Showing all categories...");
@@ -363,36 +365,7 @@ class finalProject {
     }
 
     public static void showActiveClass(Connection conn) {
-        Statement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
-
-        } catch (SQLException ex) {
-            // handle any errors
-            System.err.println("SQLException: " + ex.getMessage());
-            System.err.println("SQLState: " + ex.getSQLState());
-            System.err.println("VendorError: " + ex.getErrorCode());
-        } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                stmt = null;
-            }
-        }
+        System.out.println("Course ID: " + currClassID + "|Course Number: " + currClass + "|Term: " + currTerm + "|Section: " + currSection + "|Description: " + currDescription);
     }
 
     /**
@@ -403,7 +376,7 @@ class finalProject {
         PreparedStatement ps = null;
 
         try {
-            ps.prepareStatement("SELECT categories_name, hasWeight_weight FROM categories" +
+            ps = conn.prepareStatement("SELECT categories_name, hasWeight_weight FROM categories" +
                     "JOIN hasWeight ON categories.categories_id = hasWeight.categories_id;");
             ps.execute();
 
@@ -413,21 +386,16 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
+            if (ps != null) 
+            {
+                try 
+                {
+                    ps.close();
+                } 
+                catch (SQLException sqlEx) 
+                {
                 } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                stmt = null;
+                ps = null;
             }
         }
     }
@@ -450,7 +418,7 @@ class finalProject {
             rs = stmt.executeQuery("SELECT categories_id FROM categories WHERE categories_name =" + name + ";");
 
             ps = conn.prepareStatement("insert into hasWeight (hasWeight_weight, categories_id) values (?, ?);");
-            ps.setInt(1, weight);
+            ps.setInt(1, Integer.parseInt(weight));
             ps.setInt(2, rs.getInt(1));
             ps.execute();
 
@@ -488,7 +456,7 @@ class finalProject {
         ResultSet rs = null;
         try {
             stmt = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments\n" +
-                    "ORDER BY categories_id;")
+                    "ORDER BY categories_id;");
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
@@ -520,7 +488,7 @@ class finalProject {
         Statement check = null;
 
         try {
-            stmt = conn.preparedStatement("insert into assignments" +
+            stmt = conn.prepareStatement("insert into assignments" +
                     "(assignments_name, assignments_description, assignments_pointValue, categories_id) values (?, ?, ?, ?);");
             stmt.setString(1, name);
             stmt.setString(2, descrip);
@@ -529,7 +497,7 @@ class finalProject {
             check = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = check.executeQuery("Select categories_id FROM categories WHERE categories_name =" + cat);
             if(rs != null){
-                stmt.setString(4, rs.getInt(1));
+                stmt.setString(4, Integer.toString(rs.getInt(1)));
                 stmt.execute();
             }else{
                 System.out.println("ERROR: Category does not exist.");
