@@ -31,7 +31,8 @@ CREATE TABLE class(
 	class_courseNum VARCHAR(10) NOT NULL,
 	class_term VARCHAR(20) NOT NULL,
 	class_sectionNum INTEGER NOT NULL,
-	class_description VARCHAR(100) NOT NULL
+	class_description VARCHAR(100) NOT NULL,
+	isActive BOOLEAN
 );
 
 CREATE TABLE students (
