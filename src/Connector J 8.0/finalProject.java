@@ -6,11 +6,11 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 class finalProject {
-    static int currClassID;
-    static String currClass;
-    static String currTerm;
-    static String currSection;
-    static String currDescription;
+    static int currClassID = 0;
+    static String currClass = "";
+    static String currTerm = "";
+    static String currSection = "";
+    static String currDescription = "";
 
     public static void main(String[] args) {
         try {
