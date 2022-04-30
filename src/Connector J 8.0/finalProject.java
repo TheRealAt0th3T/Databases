@@ -450,16 +450,21 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            if (ps != null) 
-            {
-                try 
-                {
-                    ps.close();
-                } 
-                catch (SQLException sqlEx) 
-                {
+            // it is a good idea to release resources in a finally{} block
+            // in reverse-order of their creation if they are no-longer needed
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
                 } // ignore
-                ps = null;
+                rs = null;
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+                stmt = null;
             }
         }
     }
@@ -805,9 +810,9 @@ class finalProject {
             boolean hasNext = true;
             rs.first();
             while(hasNext){
-                System.out.println("ClassID: " + rs.getInt(1) + ", CourseNum: " + rs.getString(2) + ", Term: " + rs.getString(3)) +
+                System.out.println("ClassID: " + rs.getInt(1) + ", CourseNum: " + rs.getString(2) + ", Term: " + rs.getString(3) +
                 ", SectionNum: " + rs.getInt(4) + ", Description: " + rs.getString(5) + ", FirstName: " +
-                rs.getString(7) + ", LastName: " + rs.getString(8) + "Username: " + rs.getString(9) + ", StudentIDNum: " + rs.getInt(10);
+                rs.getString(7) + ", LastName: " + rs.getString(8) + "Username: " + rs.getString(9) + ", StudentIDNum: " + rs.getInt(10));
                 hasNext = rs.next();
             }
 
