@@ -588,6 +588,7 @@ class finalProject {
             stmt.setString(1, cat);
             stmt.execute();
             rs = stmt.getResultSet();
+            rs.first();
             if(rs != null){
                 stmt.setString(4, Integer.toString(rs.getInt(1)));
                 stmt.execute();
