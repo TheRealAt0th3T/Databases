@@ -338,6 +338,7 @@ class finalProject {
                     currTerm = rs.getString(3);
                     currSection = Integer.toString(rs.getInt(4));
                     currDescription = rs.getString(5);
+                    System.out.println(rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getString(3) + ":" + rs.getInt(4) + ":" + rs.getString(5));
                 }
             }
             System.out.println("Class has been selected");
