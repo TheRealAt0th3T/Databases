@@ -520,10 +520,19 @@ class finalProject {
     public static void showAssignment(Connection conn) {
         Statement stmt = null;
         ResultSet rs = null;
+
         try {
-            stmt = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments" +
+
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = stmt.executeQuery("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments" +
                     " ORDER BY categories_id;");
 
+            boolean hasNext = true;
+            rs.first();
+            while(hasNext){
+                System.out.println("Assignment: " + rs.getString(1) + ", PointValue: " + rs.getInt(2) + ", CategoryID: " + rs.getInt(3));
+                hasNext = rs.next();
+            }
 
         } catch (SQLException ex) {
             // handle any errors
@@ -567,6 +576,7 @@ class finalProject {
             if(rs != null){
                 stmt.setString(4, Integer.toString(rs.getInt(1)));
                 stmt.execute();
+                System.out.println("Assignment was added.");
             }else{
                 System.out.println("ERROR: Category does not exist.");
             }
@@ -631,6 +641,7 @@ class finalProject {
                 }
                 stmt = conn.prepareStatement("UPDATE students SET class_id = " + temp + "WHERE students_IDnum =" + studentid);
                 stmt.execute();
+                System.out.println("Student was added.");
 
             }else{ //student doesn't exist
                 stmt = conn.prepareStatement("insert into students (students_firstName, students_lastName, students_username, students_IDnum, class_id) " +
@@ -687,6 +698,7 @@ class finalProject {
             if(rs != null){ //therefore student exists
                 stmt = conn.prepareStatement("UPDATE students SET class_id = " + temp + "WHERE username =" + username);
                 stmt.execute();
+                System.out.println("Student was updated.");
             }else{
                 System.out.println("ERROR: This user does not exist.");
             }
@@ -722,10 +734,11 @@ class finalProject {
      */
     public static void showAllStudents(Connection conn) {
 
-        PreparedStatement stmt = null;
+        Statement stmt = null;
         ResultSet rs = null;
 
         try {
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             String getActive = "SELECT class_courseNum, class_sectionNum, class_term FROM class WHERE isActive = true";
             rs = stmt.executeQuery(getActive);
@@ -742,9 +755,14 @@ class finalProject {
             }
 
             temp += ";";
+            rs = stmt.executeQuery(temp);
 
-            stmt = conn.prepareStatement(temp);
-            stmt.execute();
+            boolean hasNext = true;
+            rs.first();
+            while(hasNext){
+                System.out.println("Class: " + rs.getString(1) + ", Section: " + rs.getInt(2) + ", Term: " + rs.getString(3));
+                hasNext = rs.next();
+            }
 
         } catch (SQLException ex) {
             // handle any errors
@@ -772,16 +790,27 @@ class finalProject {
      */
     public static void showStudents(Connection conn, String name) {
 
-        PreparedStatement stmt = null;
+        Statement stmt = null;
+        ResultSet rs = null;
 
         try {
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             name = name.toLowerCase();
             String temp = "SELECT * FROM class" +
                     " JOIN students on students.class_id = class.class_id" +
                     " WHERE students.students_name LIKE '%" + name + "%' OR students.students_username LIKE '%" + name + "%';";
 
-            stmt = conn.prepareStatement(temp);
-            stmt.execute();
+            rs = stmt.executeQuery(temp);
+
+            boolean hasNext = true;
+            rs.first();
+            while(hasNext){
+                System.out.println("ClassID: " + rs.getInt(1) + ", CourseNum: " + rs.getString(2) + ", Term: " + rs.getString(3)) +
+                ", SectionNum: " + rs.getInt(4) + ", Description: " + rs.getString(5) + ", FirstName: " +
+                rs.getString(7) + ", LastName: " + rs.getString(8) + "Username: " + rs.getString(9) + ", StudentIDNum: " + rs.getInt(10);
+                hasNext = rs.next();
+            }
+
 
         } catch (SQLException ex) {
             // handle any errors
