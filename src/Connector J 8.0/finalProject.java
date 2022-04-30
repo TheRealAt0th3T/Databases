@@ -443,7 +443,7 @@ class finalProject {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            stmt = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments\n" +
+            stmt = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, categories_id FROM assignments" +
                     "ORDER BY categories_id;");
         } catch (SQLException ex) {
             // handle any errors
@@ -528,6 +528,10 @@ class finalProject {
         ResultSet rs = null;
 
         try {
+            String getActive = "SELECT class_id FROM class WHERE isActive = true";
+            rs = stmt.executeQuery(getActive);
+            int temp = rs.getInt(1);
+
             checkStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = checkStmt.executeQuery("SELECT * FROM students WHERE students_IDnum = " + studentid);
 
@@ -545,7 +549,7 @@ class finalProject {
                     System.out.println("WARNING: " + username + "'s last name is being updated.");
                     stmt.execute();
                 }
-                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currData.getCurrClass() + "WHERE students_IDnum =" + studentid);
+                stmt = conn.prepareStatement("UPDATE students SET class_id = " + temp + "WHERE students_IDnum =" + studentid);
                 stmt.execute();
 
             }else{ //student doesn't exist
@@ -555,7 +559,7 @@ class finalProject {
                 stmt.setString(2, last);
                 stmt.setString(3, username);
                 stmt.setInt(4, Integer.parseInt(studentid));
-                stmt.setString(5, Integer.toString(currData.getClassId()));
+                stmt.setString(5, Integer.toString(temp);
                 stmt.execute();
             }
 
@@ -594,10 +598,14 @@ class finalProject {
         ResultSet rs = null;
 
         try {
+            String getActive = "SELECT class_id FROM class WHERE isActive = true";
+            rs = stmt.executeQuery(getActive);
+            int temp = rs.getInt(1);
+
             rs = stmt.executeQuery("SELECT * FROM students WHERE students_username =" + username);
 
             if(rs != null){ //therefore student exists
-                stmt = conn.prepareStatement("UPDATE students SET class_id = " + currData.getCurrClass() + "WHERE username =" + username);
+                stmt = conn.prepareStatement("UPDATE students SET class_id = " + temp + "WHERE username =" + username);
                 stmt.execute();
             }else{
                 System.out.println("ERROR: This user does not exist.");
@@ -635,15 +643,21 @@ class finalProject {
     public static void showAllStudents(Connection conn) {
 
         PreparedStatement stmt = null;
+        ResultSet rs = null;
 
         try {
+
+            String getActive = "SELECT class_courseNum, class_sectionNum, class_term FROM class WHERE isActive = true";
+            rs = stmt.executeQuery(getActive);
+
             String temp = "SELECT * FROM class" +
                     "JOIN students on students.class_id = class.class_id" +
-                    "WHERE class_courseNum = " + currData.getCurrClass();
+                    "WHERE class_courseNum = " + rs.getString(1);
+
             if(currData.getCurrTerm() != null){
-                temp += "AND class_term = " + currData.getCurrTerm() ;
+                temp += "AND class_term = " + rs.getString(3);
                 if(currData.getCurrSection()  != null){ //if sectionNUM exists
-                    temp += "and class_sectionNum = " + currData.getCurrSection();
+                    temp += "and class_sectionNum = " + rs.getString(2);
                 }
             }
 
@@ -840,40 +854,4 @@ class finalProject {
         }
     }
 
-}
-
-class CurrData{
-    private int currClassId;
-    private String currClass;
-    private String currTerm;
-    private String currSection;
-    private String currDesc;
-
-    public CurrData(int num, String className, String term, String section, String desc) {
-        this.currClassId = num;
-        this.currClass = className;
-        this.currTerm = term;
-        this.currSection = section;
-        this.currDesc = desc;
-    }
-
-    public int getClassId() {
-        return this.currClassId;
-    }
-
-    public String getCurrDesc(){ 
-        return this.currDesc;
-    }
-
-    public String getCurrClass(){ 
-        return this.currClass;
-    }
-
-    public String getCurrTerm(){ 
-        return this.currTerm;
-    }
-
-    public String getCurrSection(){ 
-        return this.currSection;
-    }
 }
