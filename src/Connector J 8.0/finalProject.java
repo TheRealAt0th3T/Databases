@@ -898,9 +898,10 @@ class finalProject {
             ps.execute();
 
             System.out.println("HERE");
+
             rs = ps.getResultSet();
             while(rs.next()) {
-                if (rs.getInt(1) < Integer.parseInt(grade)) {
+                if (rs.getInt(2) < Integer.parseInt(grade)) {
                     System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(1) + ").");
                 }
             }
