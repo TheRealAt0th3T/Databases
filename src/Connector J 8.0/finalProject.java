@@ -6,10 +6,10 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 class finalProject {
-    private int currClassID;
-    private String currClass;
-    private String currTerm;
-    private String currSection;
+    private static int currClassID;
+    private static String currClass;
+    private static String currTerm;
+    private static String currSection;
 
     public static void main(String[] args) {
         try {
@@ -19,9 +19,38 @@ class finalProject {
 			System.out.println();
 
             Connection conn = makeConnection("53306", "finalProject","Minfilia1178");
-            if (args[0].equals("new-class")) {
-                System.out.println("Creating new class...");
-                createClass(conn, args[1], args[2], args[3], args[4], args[5], args[6]);
+
+            switch(args[0]) {
+                case "new-class":
+                    System.out.println("Creating new class...");
+                    createClass(conn, args[1], args[2], args[3], args[4]);
+                    break;
+                case "list-classes":
+                    System.out.println("listing classes...");
+                    listClasses(conn);
+                    break;
+                case "select-class":
+                    break;
+                case "show-class":
+                    break;
+                case "show-categories":
+                    break;
+                case "add-category":
+                    break;
+                case "show-assignment":
+                    break;
+                case "add-assignment":
+                    break;
+                case "add-student":
+                    break;
+                case "show-students":
+                    break;
+                case "grade":
+                    break;
+                case "student-grades":
+                    break;
+                case "gradebook":
+                    break;
             }
 
             conn.close();
@@ -107,20 +136,18 @@ class finalProject {
         }
     }
 
-    public static void createClass(Connection conn, String num, String term, String sectionNum, String description, String professor, String title) {
+    public static void createClass(Connection conn, String num, String term, String sectionNum, String description) {
         
         PreparedStatement stmt = null;
 
         try {
             stmt = conn.prepareStatement("Insert INTO class (class_courseNum," +
             " class_term, class_sectionNum, class_description, class_professor, class_title)" +
-            " VALUES(?, ?, ?, ?, ?, ?);");
+            " VALUES(?, ?, ?, ?);");
             stmt.setString(1, num);
             stmt.setString(2, term);
             stmt.setInt(3, Integer.parseInt(sectionNum));
             stmt.setString(4, description);
-            stmt.setString(5, professor);
-            stmt.setString(6, title);
             
             stmt.execute();
 
@@ -150,7 +177,22 @@ class finalProject {
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            rs = stmt.executeQuery("Select c.*, Count(s.class_id) From class c" +
+                "JOIN students s ON s.class_id = c.class_id" +
+                "GROUP BY c.class_id;");
+
+            boolean rowsLeft = true;
+
+            rs.first();
+            while (rowsLeft) {
+                System.out.println(rs.getInt(1) 
+                        + ":" + rs.getString(2) 
+                        + ":" + rs.getString(3) 
+                        + ":" + rs.getInt(4)
+                        + ":" + rs.getString(5)
+                        + ":" + rs.getInt(6));
+                        rowsLeft = rs.next();
+            }
 
         } catch (SQLException ex) {
             // handle any errors
@@ -178,12 +220,15 @@ class finalProject {
     }
 
     public static void activateClass(Connection conn) {
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = stmt.executeQuery("SELECT * FROM class;");
+            stmt = conn.prepareStatement("Insert INTO class (class_courseNum," +
+            " class_term, class_sectionNum, class_description, class_professor, class_title)" +
+            " VALUES(?, ?, ?, ?);");
+            
+            stmt.execute();
 
         } catch (SQLException ex) {
             // handle any errors
@@ -383,11 +428,12 @@ class finalProject {
      */
     public static void addStudent(Connection conn, String username, String studentid, String last, String first) {
         PreparedStatement stmt = null;
+        Statement checkStmt = null;
         ResultSet rs = null;
 
         try {
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM students WHERE students_IDnum =" + studentid);
+            checkStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = checkStmt.executeQuery("SELECT * FROM students WHERE students_IDnum = " + studentid);
 
             if(rs != null){ //student exists
                 rs = stmt.executeQuery("SELECT students_firstName, students_lastName FROM students WHERE students_IDnum = " + studentid);
@@ -413,7 +459,7 @@ class finalProject {
                 stmt.setString(2, last);
                 stmt.setString(3, username);
                 stmt.setInt(4, Integer.parseInt(studentid));
-                stmt.setString(5, currClassID);
+                stmt.setString(5, Integer.toString(currClassID));
                 stmt.execute();
             }
 
@@ -501,13 +547,13 @@ class finalProject {
             if(currTerm != null){
                 temp += "AND class_term = " + currTerm;
                 if(currSection != null){ //if sectionNUM exists
-                    temp += "and class_sectionNum = " + currSection);
+                    temp += "and class_sectionNum = " + currSection;
                 }
             }
 
             temp += ";";
 
-            stmt.conn.prepareStatement(temp);
+            stmt = conn.prepareStatement(temp);
             stmt.execute();
 
         } catch (SQLException ex) {
@@ -516,19 +562,14 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
+            if (stmt != null) 
+            {
+                try 
+                {
                     stmt.close();
-                } catch (SQLException sqlEx) {
+                } 
+                catch (SQLException sqlEx) 
+                {
                 } // ignore
                 stmt = null;
             }
@@ -549,7 +590,7 @@ class finalProject {
                     "JOIN students on students.class_id = class.class_id" +
                     "WHERE students.students_name LIKE '%" + name + "%' OR students.students_username LIKE '%" + name + "%';";
 
-            stmt.conn.prepareStatement(temp);
+            stmt = conn.prepareStatement(temp);
             stmt.execute();
 
         } catch (SQLException ex) {
@@ -558,19 +599,14 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
+            if (stmt != null) 
+            {
+                try 
+                {
                     stmt.close();
-                } catch (SQLException sqlEx) {
+                } 
+                catch (SQLException sqlEx) 
+                {
                 } // ignore
                 stmt = null;
             }
@@ -655,19 +691,14 @@ class finalProject {
             System.err.println("SQLState: " + ex.getSQLState());
             System.err.println("VendorError: " + ex.getErrorCode());
         } finally {
-            // it is a good idea to release resources in a finally{} block
-            // in reverse-order of their creation if they are no-longer needed
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqlEx) {
-                } // ignore
-                rs = null;
-            }
-            if (stmt != null) {
-                try {
+            if (stmt != null) 
+            {
+                try 
+                {
                     stmt.close();
-                } catch (SQLException sqlEx) {
+                } 
+                catch (SQLException sqlEx) 
+                {
                 } // ignore
                 stmt = null;
             }
