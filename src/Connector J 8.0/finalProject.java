@@ -642,7 +642,7 @@ class finalProject {
                 if(hasResults){
                     //rs.first();
                     //int temp = ps.getResultSet(1);
-                    System.out.println("current Class id is:" + temp);
+                    System.out.println("current Class id is:");
                 }
 
                 ps = conn.prepareStatement("SELECT students_firstName, students_lastName FROM students WHERE students_username = ?");
