@@ -904,7 +904,6 @@ class finalProject {
             ps.setString(2, username);
             ps.execute();
 
-            //System.out.println("HERE");
             rs = ps.getResultSet();
             while(rs.next()) {
                 if (rs.getInt(2) < Integer.parseInt(grade)) {
@@ -926,17 +925,7 @@ class finalProject {
                 System.out.println("Grade is updated.");
             }
 
-            /*
-            if(rs.getInt(1) > Integer.parseInt(grade)){
-                System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(1) + ").");
-            }else{
-                ps = conn.prepareStatement("UPDATE students" +
-                        " JOIN assignedHW on assignedHW.students_id = students.students_id" +
-                        " JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
-                        " SET assignedHW.assignedHW_grade = " + grade + "WHERE students.students_username =" + username +
-                        " AND assignments.assignments_name = " + assignmentName + ";");
-            }
-            */
+
         } catch (SQLException ex) {
             // handle any errors
             System.err.println("SQLException: " + ex.getMessage());
