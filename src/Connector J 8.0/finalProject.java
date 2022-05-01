@@ -897,7 +897,7 @@ class finalProject {
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ps = conn.prepareStatement("SELECT assignments_id, assignments_pointValue, assignedHW_grade, students_id FROM assignments" +
+            ps = conn.prepareStatement("SELECT assignments.assignments_id, assignments_pointValue, assignedHW_grade, students_id FROM assignments" +
                             " JOIN assignedHW ON assignedHW.assignments_id = assignments.assignments_id" +
                     " JOIN students ON assignedHW.students_id = students.students_id WHERE assignments_name = ? AND students_username = ?;");
             ps.setString(1, assignmentName);
