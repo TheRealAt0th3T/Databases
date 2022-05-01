@@ -95,7 +95,7 @@ class finalProject {
     }
 
     /**
-     * Connection function to 
+     * Connection function to our database
      * @param port
      * @param database
      * @param password
@@ -171,6 +171,14 @@ class finalProject {
         }
     }
 
+    /**
+     * Adds a class to the database
+     * @param conn
+     * @param num
+     * @param term
+     * @param sectionNum
+     * @param description
+     */
     public static void createClass(Connection conn, String num, String term, String sectionNum, String description) {
         
         PreparedStatement stmt = null;
@@ -206,6 +214,10 @@ class finalProject {
         }
     }
 
+    /**
+     * Lists all classes with students
+     * @param conn
+     */
     public static void listClasses(Connection conn) {
         Statement stmt = null;
         ResultSet rs = null;
@@ -254,6 +266,13 @@ class finalProject {
         }
     }
 
+    /**
+     * Selects the specified class as the active class
+     * @param conn
+     * @param courseNum
+     * @param term
+     * @param sectionNum
+     */
     public static void activateClass(Connection conn, String courseNum, String term, String sectionNum) {
         PreparedStatement stmt = null;
         PreparedStatement setActive = null;
@@ -382,6 +401,10 @@ class finalProject {
         }
     }
 
+    /**
+     * Shows the currently active class
+     * @param conn
+     */
     public static void showActiveClass(Connection conn) {
         Statement stmt = null;
         ResultSet rs = null;
