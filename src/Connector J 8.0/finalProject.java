@@ -897,7 +897,7 @@ class finalProject {
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ps = conn.prepareStatement("SELECT assignments_name, assignments_pointValue, assignedHW_grade, students_username FROM assignments" +
+            ps = conn.prepareStatement("SELECT assignments_id, assignments_pointValue, assignedHW_grade, students_id FROM assignments" +
                             " JOIN assignedHW ON assignedHW.assignments_id = assignments.assignments_id" +
                     " JOIN students ON assignedHW.students_id = students.students_id WHERE assignments_name = ? AND students_username = ?;");
             ps.setString(1, assignmentName);
@@ -910,25 +910,17 @@ class finalProject {
                 if (rs.getInt(2) < Integer.parseInt(grade)) {
                     System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(2) + ").");
                     System.out.println("Setting points to max value.");
-                    ps = conn.prepareStatement("UPDATE students" +
-                            " JOIN assignedHW on assignedHW.students_id = students.students_id" +
-                            " JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
-                            " SET assignedHW.assignedHW_grade = ? WHERE students.students_username = ?" +
-                            " AND assignments.assignments_name = ?;");
-                    ps.setInt(1, rs.getInt(2));
-                    ps.setString(2, username);
-                    ps.setString(3, assignmentName);
+                    ps = conn.prepareStatement("INSERT into assignedHW (assignedHW_grade, students_id, assignments_id) values (?, ?, ?);");
+                    ps.setInt(1, Integer.parseInt(grade));
+                    ps.setInt(2, rs.getInt(4));
+                    ps.setInt(3, rs.getInt(1));
                     ps.execute();
                 }else{
                     System.out.println("Updating...");
-                    ps = conn.prepareStatement("UPDATE students" +
-                            " JOIN assignedHW on assignedHW.students_id = students.students_id" +
-                            " JOIN assignments on assignments.assignments_id = assignedHW.assignments_id" +
-                            " SET assignedHW.assignedHW_grade = ? WHERE students.students_username = ?" +
-                            " AND assignments.assignments_name = ?;");
+                    ps = conn.prepareStatement("INSERT into assignedHW (assignedHW_grade, students_id, assignments_id) values (?, ?, ?);");
                     ps.setInt(1, Integer.parseInt(grade));
-                    ps.setString(2, username);
-                    ps.setString(3, assignmentName);
+                    ps.setInt(2, rs.getInt(4));
+                    ps.setInt(3, rs.getInt(1));
                     ps.execute();
                 }
                 System.out.println("Grade is updated.");
