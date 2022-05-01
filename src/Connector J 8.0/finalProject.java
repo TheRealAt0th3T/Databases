@@ -478,14 +478,18 @@ class finalProject {
     public static void addCategory(Connection conn, String name, String weight) {
         Statement stmt = null;
         ResultSet rs = null;
+        ResultSet activeClass = null;
         PreparedStatement ps = null;
         boolean hasResult = false;
 
         try {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            activeClass = stmt.executeQuery("SELECT class_id FROM class WHERE isActive = true");
+            activeClass.first();
 
-            ps = conn.prepareStatement("insert into categories (categories_name) values (?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ps = conn.prepareStatement("insert into categories (categories_name, class_id) values (?, ?);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps.setString(1, name);
+            ps.setString(2, activeClass.getString(1));
             ps.execute();
 
             ps = conn.prepareStatement("SELECT categories_id FROM categories WHERE categories_name = ? ;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
