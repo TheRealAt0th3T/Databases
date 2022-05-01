@@ -16,6 +16,8 @@ and related information.
 * dump.sql - a file containing all inserts with example data
 * README.md - this file
 
+Link to demo video: https://www.youtube.com/watch?v=lLFEuly-bdI
+
 ## Implementation
 The main SQL file (finalProject.sql) contains all the create statements for the database and tables. All the attributes within each table follow 
 the outline that was made in the ER model (model.pdf). Once the main SQL file has fully ran, the dump.sql file can be run. This file inserts data 
