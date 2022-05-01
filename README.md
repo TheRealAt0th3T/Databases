@@ -18,6 +18,15 @@ and related information.
 
 Link to demo video: https://www.youtube.com/watch?v=lLFEuly-bdI
 
+
+## How to run
+
+to compile (make sure to call within same directory as the java file: 
+``` javac -cp .:mysql-connector-java-8.0.29.jar [java file name] ```
+
+to run:
+```java -cp .:mysql-connector-java-8.0.29.jar [filename] [any other arguements for the commands]```
+
 ## Implementation
 The main SQL file (finalProject.sql) contains all the create statements for the database and tables. All the attributes within each table follow 
 the outline that was made in the ER model (model.pdf). Once the main SQL file has fully ran, the dump.sql file can be run. This file inserts data 
