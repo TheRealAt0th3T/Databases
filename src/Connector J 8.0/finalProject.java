@@ -225,7 +225,7 @@ class finalProject {
                         + ":" + rs.getString(3) 
                         + ":" + rs.getInt(4)
                         + ":" + rs.getString(5)
-                        + ":" + rs.getInt(6));
+                        + ":" + rs.getInt(7));
                         rowsLeft = rs.next();
             }
 
