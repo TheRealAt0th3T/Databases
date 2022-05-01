@@ -891,34 +891,45 @@ class finalProject {
      * @param conn
      */
     public static void gradeAssignment(Connection conn, String assignmentName, String username, String grade) {
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
+        ResultSet rs2 = null;
         PreparedStatement ps = null;
+        boolean hasResult1 = false;
+        boolean hasResult2 = false;
 
         try {
-            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ps = conn.prepareStatement("SELECT assignments.assignments_id, assignments_pointValue, assignedHW_grade, students.students_id FROM assignments" +
-                            " JOIN assignedHW ON assignedHW.assignments_id = assignments.assignments_id" +
-                    " JOIN students ON assignedHW.students_id = students.students_id WHERE assignments_name = ? AND students_username = ?;");
+            ps = conn.prepareStatement("SELECT assignments_id FROM assignments WHERE assignments_name = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps.setString(1, assignmentName);
-            ps.setString(2, username);
-            ps.execute();
+            hasResult1 = ps.execute();
 
-            rs = ps.getResultSet();
-            while(rs.next()) {
+            stmt = conn.prepareStatement("SELECT students_id FROM students WHERE students_username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setString(2, username);
+            hasResult2 = stmt.execute();
+
+            if (hasResult1 && hasResult2) {
+                rs = ps.getResultSet();
+                rs2 = stmt.getResultSet();
+
+                rs.beforeFirst();
+                rs2.beforeFirst();
+            }
+
+            
+            while(rs.next() && rs2.next()) {
                 if (rs.getInt(2) < Integer.parseInt(grade)) {
                     System.out.println("WARNING: The grade you are trying to input exceed the number of points configured (" + rs.getInt(2) + ").");
                     System.out.println("Setting points to max value.");
                     ps = conn.prepareStatement("INSERT into assignedHW (assignedHW_grade, students_id, assignments_id) values (?, ?, ?);");
                     ps.setInt(1, Integer.parseInt(grade));
-                    ps.setInt(2, rs.getInt(4));
+                    ps.setInt(2, rs2.getInt(1));
                     ps.setInt(3, rs.getInt(1));
                     ps.execute();
                 }else{
                     System.out.println("Updating...");
                     ps = conn.prepareStatement("INSERT into assignedHW (assignedHW_grade, students_id, assignments_id) values (?, ?, ?);");
                     ps.setInt(1, Integer.parseInt(grade));
-                    ps.setInt(2, rs.getInt(4));
+                    ps.setInt(2, rs2.getInt(1));
                     ps.setInt(3, rs.getInt(1));
                     ps.execute();
                 }
