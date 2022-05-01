@@ -899,12 +899,12 @@ class finalProject {
         boolean hasResult2 = false;
 
         try {
-            ps = conn.prepareStatement("SELECT assignments_id FROM assignments WHERE assignments_name = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ps = conn.prepareStatement("SELECT assignments_id, assignments_pointValue FROM assignments WHERE assignments_name = ?",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps.setString(1, assignmentName);
             hasResult1 = ps.execute();
 
             stmt = conn.prepareStatement("SELECT students_id FROM students WHERE students_username = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(2, username);
+            stmt.setString(1, username);
             hasResult2 = stmt.execute();
 
             if (hasResult1 && hasResult2) {
