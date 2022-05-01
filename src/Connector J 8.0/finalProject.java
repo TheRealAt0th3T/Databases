@@ -1065,7 +1065,7 @@ class finalProject {
                     " JOIN assignments ON assignments.categories_id = categories.categories_id" +
                     " JOIN assignedHW ON assignments.assignments_id = assignedHW.assignments_id" +
                     " JOIN students ON students.students_id = assignedHW.students_id" +
-                    " WHERE class.isActive = ?" +
+                    " WHERE class.isActive = true" +
                     " GROUP BY students_username, students_IDnum, students_firstName, students_LastName;",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             String getActive = "SELECT class_id FROM class WHERE isActive = true";
@@ -1076,7 +1076,6 @@ class finalProject {
                 temp = rs.getInt(1);
             }
 
-            stmt.setInt(1, temp);
             hasResult = stmt.execute();
 
             if (hasResult) {
