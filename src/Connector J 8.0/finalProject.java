@@ -992,6 +992,7 @@ class finalProject {
             " FROM categories c " +
             " JOIN assignments a ON a.categories_id = c.categories_id " +
             " JOIN assignedHW hw ON hw.assignments_id = a.assignments_id " +
+            " JOIN hasWeight w ON w.categories_id = c.categories_id " +
             " JOIN students s ON s.students_id = hw.students_id " +
             " WHERE s.students_username = ? " +
             " GROUP by c.categories_name, a.assignments_name; ",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
